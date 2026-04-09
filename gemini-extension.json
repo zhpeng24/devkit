@@ -1,0 +1,6 @@
+{
+  "name": "devkit",
+  "description": "Developer toolkit: Python code standards, type safety, and automated cleanup skills",
+  "version": "1.0.0",
+  "contextFileName": "GEMINI.md"
+}

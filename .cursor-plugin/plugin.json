@@ -1,0 +1,25 @@
+{
+  "name": "devkit",
+  "displayName": "Devkit",
+  "description": "Developer toolkit: Python code standards, type safety, and automated cleanup skills",
+  "version": "1.0.0",
+  "author": {
+    "name": "zhpeng24"
+  },
+  "homepage": "https://github.com/zhpeng24/devkit",
+  "repository": "https://github.com/zhpeng24/devkit",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "python",
+    "type-safety",
+    "code-cleanup",
+    "pyright",
+    "ruff",
+    "best-practices"
+  ],
+  "skills": "./skills/",
+  "agents": "./agents/",
+  "commands": "./commands/",
+  "hooks": "./hooks/hooks-cursor.json"
+}
