@@ -18,8 +18,5 @@
     "ruff",
     "best-practices"
   ],
-  "skills": "./skills/",
-  "agents": "./agents/",
-  "commands": "./commands/",
-  "hooks": "./hooks/hooks.json"
+  "skills": "./skills/"
 }
