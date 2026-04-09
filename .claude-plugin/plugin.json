@@ -1,5 +1,6 @@
 {
   "name": "devkit",
+  "displayName": "Devkit",
   "description": "Developer toolkit: Python code standards, type safety, and automated cleanup skills",
   "version": "1.0.0",
   "author": {
@@ -16,5 +17,9 @@
     "pyright",
     "ruff",
     "best-practices"
-  ]
+  ],
+  "skills": "./skills/",
+  "agents": "./agents/",
+  "commands": "./commands/",
+  "hooks": "./hooks/hooks.json"
 }

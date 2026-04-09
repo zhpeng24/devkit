@@ -44,21 +44,26 @@ clone_or_update() {
 
 install_claude() {
     printf '\n%b\n\n' "${BOLD}Claude Code${NC}"
-    local dest="$HOME/.claude/plugins/devkit"
-    clone_or_update "$dest"
 
     if command -v claude &>/dev/null; then
-        info "Registering plugin with Claude Code…"
-        claude plugins add "$dest" 2>/dev/null \
-            && success "Plugin registered" \
-            || warn "Auto-registration failed. Run manually:
-  claude plugins add $dest"
+        info "Adding devkit marketplace…"
+        claude plugins marketplace add "$REPO_URL" 2>/dev/null \
+            && success "Marketplace added" \
+            || warn "Marketplace may already be configured"
+
+        info "Installing devkit plugin…"
+        claude plugins install devkit 2>/dev/null \
+            && success "Plugin installed" \
+            || warn "Auto-install failed. Run manually:
+  claude plugins marketplace add $REPO_URL
+  claude plugins install devkit"
     else
         warn "claude CLI not found. After installing Claude Code, run:"
-        printf '  %b\n' "${BOLD}claude plugins add $dest${NC}"
+        printf '  %b\n' "${BOLD}claude plugins marketplace add $REPO_URL${NC}"
+        printf '  %b\n' "${BOLD}claude plugins install devkit${NC}"
     fi
 
-    success "Claude Code — done!"
+    success "Claude Code — done! Restart Claude Code to load the plugin."
 }
 
 install_cursor() {

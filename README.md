@@ -40,8 +40,8 @@ Supported platforms: `claude` · `cursor` · `copilot` · `codex` · `opencode` 
 ### Claude Code
 
 ```bash
-git clone https://github.com/zhpeng24/devkit.git ~/.claude/plugins/devkit
-claude plugins add ~/.claude/plugins/devkit
+claude plugins marketplace add https://github.com/zhpeng24/devkit.git
+claude plugins install devkit
 ```
 
 ### Cursor
@@ -129,7 +129,7 @@ curl -fsSL https://raw.githubusercontent.com/zhpeng24/devkit/main/scripts/instal
 
 ```bash
 # Claude Code
-cd ~/.claude/plugins/devkit && git pull
+claude plugins update devkit
 
 # Cursor
 cd ~/.cursor/plugins/local/devkit && git pull

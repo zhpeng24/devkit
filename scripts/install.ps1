@@ -44,21 +44,25 @@ function Invoke-CloneOrUpdate {
 
 function Install-Claude {
     Write-Host "`nClaude Code`n" -ForegroundColor White -NoNewline; Write-Host ""
-    $dest = Join-Path $env:USERPROFILE ".claude\plugins\devkit"
-    Invoke-CloneOrUpdate $dest
 
     if (Get-Command claude -ErrorAction SilentlyContinue) {
-        Write-Info "Registering plugin with Claude Code…"
-        claude plugins add $dest 2>$null
-        if ($LASTEXITCODE -eq 0) { Write-Success "Plugin registered" }
-        else { Write-Warn "Auto-registration failed. Run manually:`n  claude plugins add $dest" }
+        Write-Info "Adding devkit marketplace…"
+        claude plugins marketplace add $RepoUrl 2>$null
+        if ($LASTEXITCODE -eq 0) { Write-Success "Marketplace added" }
+        else { Write-Warn "Marketplace may already be configured" }
+
+        Write-Info "Installing devkit plugin…"
+        claude plugins install devkit 2>$null
+        if ($LASTEXITCODE -eq 0) { Write-Success "Plugin installed" }
+        else { Write-Warn "Auto-install failed. Run manually:`n  claude plugins marketplace add $RepoUrl`n  claude plugins install devkit" }
     }
     else {
         Write-Warn "claude CLI not found. After installing Claude Code, run:"
-        Write-Host "  claude plugins add $dest"
+        Write-Host "  claude plugins marketplace add $RepoUrl"
+        Write-Host "  claude plugins install devkit"
     }
 
-    Write-Success "Claude Code — done!"
+    Write-Success "Claude Code — done! Restart Claude Code to load the plugin."
 }
 
 function Install-Cursor {
