@@ -63,7 +63,7 @@ function Install-Claude {
 
 function Install-Cursor {
     Write-Host "`nCursor`n" -ForegroundColor White -NoNewline; Write-Host ""
-    $dest = Join-Path $env:USERPROFILE ".cursor\plugins\devkit"
+    $dest = Join-Path $env:USERPROFILE ".cursor\plugins\local\devkit"
     Invoke-CloneOrUpdate $dest
     Write-Success "Cursor — done! Restart Cursor to detect the plugin."
 }

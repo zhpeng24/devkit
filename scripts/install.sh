@@ -63,7 +63,7 @@ install_claude() {
 
 install_cursor() {
     printf '\n%b\n\n' "${BOLD}Cursor${NC}"
-    local dest="$HOME/.cursor/plugins/devkit"
+    local dest="$HOME/.cursor/plugins/local/devkit"
     clone_or_update "$dest"
     success "Cursor — done! Restart Cursor to detect the plugin."
 }

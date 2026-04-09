@@ -47,7 +47,7 @@ claude plugins add ~/.claude/plugins/devkit
 ### Cursor
 
 ```bash
-git clone https://github.com/zhpeng24/devkit.git ~/.cursor/plugins/devkit
+git clone https://github.com/zhpeng24/devkit.git ~/.cursor/plugins/local/devkit
 # Restart Cursor to detect the plugin
 ```
 
@@ -132,7 +132,7 @@ curl -fsSL https://raw.githubusercontent.com/zhpeng24/devkit/main/scripts/instal
 cd ~/.claude/plugins/devkit && git pull
 
 # Cursor
-cd ~/.cursor/plugins/devkit && git pull
+cd ~/.cursor/plugins/local/devkit && git pull
 
 # Copilot CLI
 cd ~/.copilot/plugins/devkit && git pull
