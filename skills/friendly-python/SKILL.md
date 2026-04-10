@@ -1,9 +1,15 @@
 ---
 name: friendly-python
-description: "Python coding standards and type safety enforcement. MUST activate on ANY Python coding task — writing new code, modifying existing code, reviewing code, or fixing diagnostics. Applies strict typing (Pyright strict mode), modern Python 3.10+ idioms, IDE-friendly patterns, and clean import hygiene. Enforces: (1) full type annotations on all functions, parameters, return types, and instance attributes, (2) prefer direct imports — TYPE_CHECKING allowed for typing-only/expensive/third-party imports, (3) no re-export in application code (library public API may re-export with __all__), (4) deliberate package strategy (regular or namespace — no accidental empty __init__.py), (5) built-in generics over typing module, (6) X|None over Optional, (7) TypedDict/Protocol/Literal over loose dict/Any, (8) lazy % logging over f-strings, (9) boundary layer exceptions — wider types at edges, narrow before core domain. Triggers on: ANY Python file creation or modification, writing Python code, editing .py files, implementing features in Python, refactoring Python, fixing diagnostics, type annotations, code review."
+description: "Production-oriented Python coding standards focused on explicit typing, predictable imports, automated formatting, and maintainable structure. Apply to Python code creation, modification, review, and diagnostic cleanup. Triggers on: Python file creation or modification, writing Python code, editing .py files, implementing features in Python, refactoring Python, fixing diagnostics, type annotations, code review."
 ---
 
 # Python Code Standards
+
+This skill is intentionally opinionated. It is optimized for **production application code** and **AI-assisted code generation**, where consistency, static analysis quality, and refactor safety matter more than local convenience.
+
+## Scope
+
+This skill is designed for **application and service codebases**. For public libraries and SDKs, some decisions differ — especially around package exports, import surfaces, and `__init__.py` conventions. Where library-specific advice diverges, the relevant rule calls it out explicitly.
 
 This skill operates in two modes. Detect which applies and follow accordingly:
 
@@ -20,9 +26,20 @@ This skill operates in two modes. Detect which applies and follow accordingly:
 
 These opinionated preferences guide every coding decision. They optimize for **strong typing, IDE discoverability, and explicit code paths**.
 
-### 1. Prefer direct imports — avoid `TYPE_CHECKING` unless justified
+Each rule carries a severity label:
+- **Required** — must follow; deviation is a defect
+- **Default** — follow by default; justified exceptions allowed
+- **Avoid** — generally discouraged, but not an error in the right context
 
-`if TYPE_CHECKING:` creates two code paths: one for the type checker, one for runtime. This is fragile, confusing to read, and hides real dependency issues. **Default: import directly.**
+### 1. Avoid `TYPE_CHECKING` by default — prefer architectural fixes first
+**Status: Default**
+
+Prefer direct imports and architectural fixes over `if TYPE_CHECKING:`.
+
+`TYPE_CHECKING` should not be used to hide avoidable dependency problems. First try:
+- Extracting shared types into a `types.py` or `_types.py` module
+- Restructuring modules to break the cycle
+- Using a `Protocol` in the depended-upon module (depend on behavior, not concrete implementations)
 
 ```python
 # ❌ AVOID — two code paths, hides dependency issues
@@ -32,14 +49,7 @@ if TYPE_CHECKING:
 
 # ✅ PREFER — import directly
 from .engine import Engine
-```
 
-**If this causes circular imports**, fix the dependency cycle architecturally:
-- Extracting shared types into a `types.py` or `_types.py` module
-- Restructuring modules to break the cycle
-- Using a Protocol in the depended-upon module (no import needed)
-
-```python
 # ✅ Break cycles with a shared types module
 # src/types.py
 from dataclasses import dataclass
@@ -56,12 +66,12 @@ from .types import State  # no cycle
 from .types import State  # no cycle
 ```
 
-**⚠️ Acceptable uses of `TYPE_CHECKING`:**
-- **Typing-only imports** that would otherwise create a runtime dependency on a heavy or optional package (e.g., importing `pandas` or `torch` just for annotations)
-- **Expensive imports** used only in annotations — large ML frameworks with significant import-time cost
-- **Localized cycle avoidance** when the cycle involves third-party code you don't control
+**Allow `TYPE_CHECKING` only when one of these applies:**
+- The import is **truly typing-only** (never used at runtime)
+- The imported module is **heavy or optional** at runtime (pandas, torch, tensorflow)
+- A localized cycle **remains after reasonable refactoring** (e.g., third-party code you don't control)
 
-When using `TYPE_CHECKING`, always combine with quoted forward references or `from __future__ import annotations` so the runtime import never fires:
+When used, keep it minimal and local. Do not use it as a default pattern.
 
 ```python
 # ⚠️ Acceptable — heavy optional dependency, typing-only
@@ -75,6 +85,7 @@ def summarize(df: pd.DataFrame) -> dict[str, float]: ...
 ```
 
 ### 2. Avoid re-export in application code — allow in library public API
+**Status: Default**
 
 Re-exporting symbols in `__init__.py` creates two valid import paths for the same symbol. In **application code**, this confuses IDE "go to definition", breaks refactoring tools, and makes dependency graphs opaque.
 
@@ -104,7 +115,10 @@ __all__ = ["Client", "MyLibError", "Config"]
 
 **Decision:** If the package is consumed by external users as a library, re-export is expected. If it's internal application code, import from the actual module.
 
-### 3. Package strategy must be explicit — no accidental empty `__init__.py`
+### 3. Prefer no empty `__init__.py` when tooling and packaging allow it
+**Status: Default**
+
+Python 3.3+ supports namespace packages (PEP 420), so empty `__init__.py` files are often unnecessary. Prefer omitting them when the project layout and tooling intentionally support that model.
 
 Choose a deliberate package strategy and apply it consistently across the project.
 
@@ -133,9 +147,10 @@ myapp/
 
 **Note:** Requires `find_namespace_packages()` in setuptools and `namespace_packages = true` in mypy configuration.
 
-**❌ AVOID: Accidental empty files** — `__init__.py` committed with no deliberate choice. If it exists, it should be there for a reason (even if that reason is "our project uses regular packages"). If it doesn't exist, the project should have intentionally adopted namespace packages.
+**❌ AVOID: Accidental empty files** — `__init__.py` committed with no deliberate choice. If it exists, it should be there for a reason (even if that reason is "our project uses regular packages"). If removal breaks imports, packaging, or tests, keep the file. If it exists only for tooling/package discovery, keep it empty.
 
 ### 4. Maximum type strictness — IDE-first
+**Status: Required**
 
 Prefer the **most specific type** that is truthful. Avoid `Any` unless the value is genuinely unconstrained.
 
@@ -157,9 +172,7 @@ config: AppConfig = load()  # TypedDict or dataclass
 5. `X | None` for nullable
 6. `Any` — last resort, always add a `# TODO: narrow type` comment
 
-**Configure Pyright strict mode** — set up based on your environment:
-
-For **CLI Pyright** (standalone, CI, or `pyright` command):
+For **CLI Pyright**, configure the project environment explicitly when needed:
 ```toml
 [tool.pyright]
 typeCheckingMode = "strict"
@@ -177,6 +190,7 @@ For **Pylance** (VS Code):
 **Either way**, ensure the virtual environment is discoverable. Without it, every third-party import (`numpy`, `matplotlib`, etc.) becomes `reportUnknownMemberType` noise.
 
 ### 5. Code formatting — automate, don't debate
+**Status: Required**
 
 Use an automated formatter. Never manually adjust whitespace, quotes, or trailing commas.
 
@@ -212,6 +226,7 @@ ruff check . --fix     # auto-fix lint issues
 If the project already uses `black` or another formatter, follow the existing convention. The point is **automation**, not tool choice.
 
 ### 6. Unused arguments — prefix or remove
+**Status: Required**
 
 Unused arguments generate Pylint W0613. Two strategies:
 
@@ -232,6 +247,7 @@ def on_epoch_end(self, _epoch: int, logs: dict[str, float]) -> None: ...
 **When removing a dead parameter:** trace ALL callers and update every call site. One missed caller = runtime `TypeError`.
 
 ### 7. Exception handling — be specific
+**Status: Required**
 
 Avoid `except Exception` (Pylint W0718). Catch the narrowest exception types that apply:
 
@@ -255,6 +271,7 @@ except (ValueError, OSError, RuntimeError):
 - Genuinely need broad catch (plugin loading, teardown)? → `except Exception` + `# pylint: disable=W0718` with a comment
 
 ### 8. Comments & Docstrings — Google style
+**Status: Required**
 
 Types annotate *what*, docstrings explain *why* and *how*. Don't repeat type information in docstrings — let type annotations self-document signatures.
 
@@ -382,6 +399,7 @@ def add(a: int, b: int) -> int:
 ```
 
 ### 9. Third-party library typing — file-level pragmatism
+**Status: Default**
 
 Libraries with incomplete stubs (matplotlib, pandas) produce waves of `reportUnknownMemberType`. Don't fight them per-line.
 
@@ -404,6 +422,7 @@ Libraries with incomplete stubs (matplotlib, pandas) produce waves of `reportUnk
 **Never** use bare `# type: ignore` — always include the specific code.
 
 ### 10. Boundary layer exceptions — wider types at the edges
+**Status: Default**
 
 Core domain code follows maximum type strictness (§4). But code at system boundaries often handles inherently dynamic data. These **boundary layers** may use wider types (`dict[str, Any]`, `Any`, `cast()`) **provided they narrow types before passing data into core logic.**
 
@@ -582,122 +601,21 @@ Also read: `pyproject.toml` (or `setup.cfg`) for Python version, and any `py.typ
 
 ## Phase 3: Apply fixes by category (P0 → P6)
 
-Process in priority order. Batch all edits per file per response.
+Process in priority order. Batch all edits per file per response. See `references/fix-patterns.md` for detailed before/after examples of each category.
 
-### P0: Real bugs
+**P0: Real bugs** — understand semantics before fixing (index errors, type incompatibility, unreachable code).
 
-Understand semantics before fixing. Common patterns:
-- Index out of range, attribute errors → logic fix
-- Incompatible types in assignment → check if a `cast()` or redesign is needed
-- Unreachable code → dead branch removal
+**P1: Unused imports** — remove entirely; verify not used via grep first. Trap: `import X` may be needed at runtime even if only used in annotations with `__future__`.
 
-### P1: Unused imports
+**P2: Deprecated typing** — modernize based on Python version: `List[X]` → `list[X]`, `Optional[X]` → `X | None`. See `references/fix-patterns.md` for full migration table.
 
-- Remove the import line entirely
-- Verify not used via grep before removing (diagnostics can be stale)
-- **Trap:** `import X` used only in type annotations + `from __future__ import annotations` → still needed at runtime if `X` appears in non-annotation code
+**P3: Missing type parameters** — infer from usage context: `dict` → `dict[str, Any]`, `tuple` → `tuple[int, int]`, etc.
 
-### P2: Deprecated typing → modern style
+**P4: Missing return types** — `__init__` → `-> None`, `__repr__` → `-> str`, `__len__` → `-> int`, etc. Annotate instance attributes in `__init__` when type is non-obvious.
 
-Apply based on Python version (Phase 0):
+**P5: Logging f-string → lazy formatting** — `logger.info(f"x={x}")` → `logger.info("x=%s", x)`.
 
-```python
-# typing module → built-in (Python ≥ 3.9)
-List[X]      →  list[X]
-Dict[K, V]   →  dict[K, V]
-Tuple[X, Y]  →  tuple[X, Y]
-Set[X]       →  set[X]
-FrozenSet[X] →  frozenset[X]
-Type[X]      →  type[X]
-
-# Union syntax (Python ≥ 3.10 or __future__.annotations)
-Optional[X]  →  X | None
-Union[X, Y]  →  X | Y
-```
-
-**Keep from typing:** `Any`, `TypeVar`, `Generic`, `Protocol`, `TypedDict`, `Literal`, `ClassVar`, `Final`, `Callable`, `Annotated`, `overload`, `TYPE_CHECKING`
-
-After replacing, clean up the `from typing import ...` line — remove symbols no longer needed, delete the line if empty.
-
-### P3: Missing type parameters
-
-Infer from usage context. Common patterns:
-
-| Bare type | Typical parameterization | When |
-|---|---|---|
-| `dict` | `dict[str, Any]` | YAML/JSON config, `**kwargs` |
-| `dict` | `dict[str, str]` | env vars, simple mappings |
-| `tuple` | `tuple[int, int]` | coordinates, 2D indices |
-| `tuple` | `tuple[Any, ...]` | variable-length homogeneous |
-| `list` | `list[float]` | numeric sequences |
-| `set` | `set[tuple[int, int]]` | coordinate sets |
-
-**`tuple` conversion pitfall:** `tuple(some_list)` returns `tuple[Any, ...]`, not `tuple[int, int]`. When Pylance flags this, either:
-- Use explicit construction: `(some_list[0], some_list[1])`
-- Add `# type: ignore[assignment]` with a comment explaining why
-- Use `cast(tuple[int, int], tuple(some_list))`
-
-Add `from typing import Any` only when `Any` is actually used in annotations.
-
-### P4: Missing return types
-
-| Pattern | Return type |
-|---|---|
-| `__init__` | `-> None` |
-| Setters / mutating methods | `-> None` |
-| `__str__`, `__repr__` | `-> str` |
-| `__len__` | `-> int` |
-| `__bool__` | `-> bool` |
-| `__eq__`, `__lt__`, etc. | `-> bool` |
-| `__enter__` | `-> Self` (3.11+) or `-> "ClassName"` |
-| `__exit__` | `-> bool \| None` |
-| `__iter__` | `-> Iterator[X]` |
-| `__next__` | `-> X` |
-| Properties | infer from return value |
-| Factory / classmethod | `-> "ClassName"` or `-> Self` |
-
-**Instance attributes in `__init__`**: Annotate at assignment when type is non-obvious:
-```python
-self.history: list[float] = []       # not just `self.history = []`
-self.cache: dict[str, Any] = {}      # not just `self.cache = {}`
-```
-
-### P5: Logging f-string → lazy formatting
-
-```python
-# Before
-logger.info(f"Processed {n} items in {elapsed:.1f}s")
-# After
-logger.info("Processed %d items in %.1fs", n, elapsed)
-```
-
-| Specifier | Type | Note |
-|---|---|---|
-| `%s` | any (via `str()`) | Default choice for non-numeric |
-| `%d` | int | Truncates floats |
-| `%f` | float | 6 decimal default |
-| `%.Nf` | float | N decimal places |
-| `%r` | any (via `repr()`) | Useful for debugging |
-| `%x` | int → hex | |
-| `%%` | literal `%` | Escape |
-
-**Trap:** Multi-line f-string logging — unwrap the f-string first, then convert:
-```python
-# Before
-logger.info(
-    f"State={state}, reward={reward:.2f}, "
-    f"done={done}"
-)
-# After
-logger.info("State=%s, reward=%.2f, done=%s", state, reward, done)
-```
-
-### P6: Style / convention
-
-Only fix if user explicitly asks. Typical Pylint conventions:
-- `C0114`–`C0116`: Missing docstrings → add module/class/function docstrings
-- `C0301`: Line too long → reformat (prefer `black` or `ruff format`)
-- `C0103`: Invalid name → rename or add `# pylint: disable=C0103`
+**P6: Style / convention** — only fix if user explicitly asks. Docstrings, line length, naming.
 
 ## Phase 4: Handle suppression comments
 
@@ -754,6 +672,8 @@ If a diagnostic references code already fixed (editor cache), inform the user an
 
 ## References
 
-- `references/fix-patterns.md` — Before/after examples for each fix category
-- `references/advanced-patterns.md` — TYPE_CHECKING, TypeVar, Protocol, TypedDict, overload, Callable, numpy/matplotlib patterns
+- `references/fix-patterns.md` — Before/after examples for each fix category (P0–P6 detail)
+- `references/advanced-patterns.md` — TypeVar, Protocol, TypedDict, overload, Callable, numpy/matplotlib, TYPE_CHECKING patterns
 - `references/tool-codes.md` — Comprehensive diagnostic code mapping and tool configuration
+- `references/boundary-layer-exceptions.md` — Before/after examples for API, ORM, plugin, prototype boundary patterns
+- `references/package-layout-patterns.md` — Regular vs namespace packages, re-export patterns, app vs library layout
