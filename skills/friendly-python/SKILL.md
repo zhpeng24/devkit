@@ -1,6 +1,6 @@
 ---
 name: friendly-python
-description: "Python coding standards and type safety enforcement. MUST activate on ANY Python coding task — writing new code, modifying existing code, reviewing code, or fixing diagnostics. Applies strict typing (Pyright strict mode), modern Python 3.10+ idioms, IDE-friendly patterns, and clean import hygiene. Enforces: (1) full type annotations on all functions, parameters, return types, and instance attributes, (2) no TYPE_CHECKING — resolve cycles architecturally, (3) no re-export via __init__.py, (4) no empty __init__.py (namespace packages), (5) built-in generics over typing module, (6) X|None over Optional, (7) TypedDict/Protocol/Literal over loose dict/Any, (8) lazy % logging over f-strings. Triggers on: ANY Python file creation or modification, writing Python code, editing .py files, implementing features in Python, refactoring Python, fixing diagnostics, type annotations, code review."
+description: "Python coding standards and type safety enforcement. MUST activate on ANY Python coding task — writing new code, modifying existing code, reviewing code, or fixing diagnostics. Applies strict typing (Pyright strict mode), modern Python 3.10+ idioms, IDE-friendly patterns, and clean import hygiene. Enforces: (1) full type annotations on all functions, parameters, return types, and instance attributes, (2) prefer direct imports — TYPE_CHECKING allowed for typing-only/expensive/third-party imports, (3) no re-export in application code (library public API may re-export with __all__), (4) deliberate package strategy (regular or namespace — no accidental empty __init__.py), (5) built-in generics over typing module, (6) X|None over Optional, (7) TypedDict/Protocol/Literal over loose dict/Any, (8) lazy % logging over f-strings, (9) boundary layer exceptions — wider types at edges, narrow before core domain. Triggers on: ANY Python file creation or modification, writing Python code, editing .py files, implementing features in Python, refactoring Python, fixing diagnostics, type annotations, code review."
 ---
 
 # Python Code Standards
@@ -20,12 +20,12 @@ This skill operates in two modes. Detect which applies and follow accordingly:
 
 These opinionated preferences guide every coding decision. They optimize for **strong typing, IDE discoverability, and explicit code paths**.
 
-### 1. NO `TYPE_CHECKING` — direct imports only
+### 1. Prefer direct imports — avoid `TYPE_CHECKING` unless justified
 
-`if TYPE_CHECKING:` creates two code paths: one for the type checker, one for runtime. This is fragile, confusing to read, and hides real dependency issues.
+`if TYPE_CHECKING:` creates two code paths: one for the type checker, one for runtime. This is fragile, confusing to read, and hides real dependency issues. **Default: import directly.**
 
 ```python
-# ❌ AVOID
+# ❌ AVOID — two code paths, hides dependency issues
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .engine import Engine
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
 from .engine import Engine
 ```
 
-**If this causes circular imports**, the architecture is wrong. Fix the dependency cycle by:
+**If this causes circular imports**, fix the dependency cycle architecturally:
 - Extracting shared types into a `types.py` or `_types.py` module
 - Restructuring modules to break the cycle
 - Using a Protocol in the depended-upon module (no import needed)
@@ -56,12 +56,30 @@ from .types import State  # no cycle
 from .types import State  # no cycle
 ```
 
-### 2. NO re-export via `__init__.py`
+**⚠️ Acceptable uses of `TYPE_CHECKING`:**
+- **Typing-only imports** that would otherwise create a runtime dependency on a heavy or optional package (e.g., importing `pandas` or `torch` just for annotations)
+- **Expensive imports** used only in annotations — large ML frameworks with significant import-time cost
+- **Localized cycle avoidance** when the cycle involves third-party code you don't control
 
-Re-exporting symbols in `__init__.py` creates two valid import paths for the same symbol. This confuses IDE "go to definition", breaks refactoring tools, and makes dependency graphs opaque.
+When using `TYPE_CHECKING`, always combine with quoted forward references or `from __future__ import annotations` so the runtime import never fires:
 
 ```python
-# ❌ AVOID — myapp/__init__.py
+# ⚠️ Acceptable — heavy optional dependency, typing-only
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pandas as pd
+
+def summarize(df: pd.DataFrame) -> dict[str, float]: ...
+```
+
+### 2. Avoid re-export in application code — allow in library public API
+
+Re-exporting symbols in `__init__.py` creates two valid import paths for the same symbol. In **application code**, this confuses IDE "go to definition", breaks refactoring tools, and makes dependency graphs opaque.
+
+```python
+# ❌ AVOID in application code — myapp/__init__.py
 from .database import Database
 from .auth import AuthService
 # allows: from myapp import Database (which file? unclear)
@@ -71,31 +89,51 @@ from myapp.database import Database
 from myapp.auth import AuthService
 ```
 
-**`__init__.py` should be empty or absent** (see next rule). If it must exist, keep it empty — no imports, no `__all__`.
+**⚠️ Acceptable in library / public API packages:**
 
-### 3. NO empty `__init__.py` (Python ≥ 3.3)
+When a package intentionally defines a public import surface (SDK, framework, shared library), re-export via `__init__.py` is the standard Python convention. Use `__all__` to make the surface explicit:
 
-Python 3.3+ supports namespace packages (PEP 420). Empty `__init__.py` files are boilerplate noise.
+```python
+# ✅ Library public API — mylib/__init__.py
+from .client import Client
+from .exceptions import MyLibError
+from .config import Config
 
-```
-# ❌ AVOID
-myapp/
-├── __init__.py     ← empty, unnecessary
-├── database.py
-└── auth.py
-
-# ✅ PREFER
-myapp/
-├── database.py
-└── auth.py
+__all__ = ["Client", "MyLibError", "Config"]
 ```
 
-**Exceptions** (keep `__init__.py` when):
-- The tool requires it: some pytest configs, mypy with `namespace_packages = false`
-- The package is distributed (setuptools needs it for `find_packages()` unless using `find_namespace_packages()`)
-- It contains real initialization code (logging setup, module-level constants)
+**Decision:** If the package is consumed by external users as a library, re-export is expected. If it's internal application code, import from the actual module.
 
-When cleaning up, check if removing `__init__.py` breaks imports/tests. If yes, keep it but keep it empty.
+### 3. Package strategy must be explicit — no accidental empty `__init__.py`
+
+Choose a deliberate package strategy and apply it consistently across the project.
+
+**✅ Regular packages (with `__init__.py`):**
+
+The standard choice. Required by setuptools `find_packages()`, expected by most tools, and unambiguous. An `__init__.py` that exists to mark a directory as a package is legitimate — it is not "empty boilerplate."
+
+```
+# ✅ Regular package — deliberate choice
+myapp/
+├── __init__.py     ← marks as regular package (may be empty — that's fine)
+├── database.py
+└── auth.py
+```
+
+**✅ Implicit namespace packages (PEP 420, no `__init__.py`):**
+
+Appropriate when the project intentionally adopts namespace package semantics (e.g., plugin systems, multi-repo packages that share a top-level namespace).
+
+```
+# ✅ Namespace package — deliberate choice
+myapp/
+├── database.py
+└── auth.py
+```
+
+**Note:** Requires `find_namespace_packages()` in setuptools and `namespace_packages = true` in mypy configuration.
+
+**❌ AVOID: Accidental empty files** — `__init__.py` committed with no deliberate choice. If it exists, it should be there for a reason (even if that reason is "our project uses regular packages"). If it doesn't exist, the project should have intentionally adopted namespace packages.
 
 ### 4. Maximum type strictness — IDE-first
 
@@ -119,7 +157,9 @@ config: AppConfig = load()  # TypedDict or dataclass
 5. `X | None` for nullable
 6. `Any` — last resort, always add a `# TODO: narrow type` comment
 
-**Configure Pyright strict mode** in `pyproject.toml`:
+**Configure Pyright strict mode** — set up based on your environment:
+
+For **CLI Pyright** (standalone, CI, or `pyright` command):
 ```toml
 [tool.pyright]
 typeCheckingMode = "strict"
@@ -129,7 +169,12 @@ venv = ".venv"
 reportUnnecessaryTypeIgnoreComment = true
 ```
 
-**Critical:** always set `venvPath` + `venv` so Pyright resolves third-party imports. Without this, every `numpy`/`matplotlib` call becomes `reportUnknownMemberType` noise.
+For **Pylance** (VS Code):
+`venvPath` and `venv` are ignored by Pylance. Instead, configure the interpreter:
+- `Cmd+Shift+P` → "Python: Select Interpreter" → choose your `.venv`
+- Or set `python.defaultInterpreterPath` in workspace settings
+
+**Either way**, ensure the virtual environment is discoverable. Without it, every third-party import (`numpy`, `matplotlib`, etc.) becomes `reportUnknownMemberType` noise.
 
 ### 5. Code formatting — automate, don't debate
 
@@ -358,6 +403,55 @@ Libraries with incomplete stubs (matplotlib, pandas) produce waves of `reportUnk
 
 **Never** use bare `# type: ignore` — always include the specific code.
 
+### 10. Boundary layer exceptions — wider types at the edges
+
+Core domain code follows maximum type strictness (§4). But code at system boundaries often handles inherently dynamic data. These **boundary layers** may use wider types (`dict[str, Any]`, `Any`, `cast()`) **provided they narrow types before passing data into core logic.**
+
+**Recognized boundary layers:**
+
+| Layer | Example | Acceptable wider type |
+|---|---|---|
+| API ingress/egress | FastAPI/Flask request/response handlers | `dict[str, Any]`, Pydantic models with `Any` fields |
+| ORM / framework hooks | Django signals, SQLAlchemy event listeners | Callback signatures dictated by framework |
+| Third-party dynamic payloads | Webhook bodies, external SDK responses | `dict[str, Any]` → validate → TypedDict/dataclass |
+| Plugin registries | Dynamic loading via `importlib` | `Any` for loaded objects → Protocol/ABC on use |
+| Prototype / spike code | Exploratory scripts, notebooks | Relaxed types OK — add `# TODO: narrow types` |
+
+```python
+# ✅ Boundary layer with narrowing — FastAPI endpoint
+from typing import Any
+from pydantic import BaseModel
+
+class CreateUserRequest(BaseModel):
+    name: str
+    email: str
+
+@app.post("/users")
+async def create_user(payload: dict[str, Any]) -> dict[str, str]:
+    # Narrow at the boundary — validate into typed model
+    user = CreateUserRequest(**payload)
+    return _create_user_internal(user)  # core logic receives typed data
+
+# ✅ Plugin registry — Any at load, Protocol on use
+from typing import Any, Protocol
+
+class PluginInterface(Protocol):
+    def execute(self, data: bytes) -> str: ...
+
+def load_plugin(name: str) -> Any:  # dynamic loading — Any is honest
+    module = importlib.import_module(f"plugins.{name}")
+    return module.Plugin()
+
+def run_plugin(plugin: PluginInterface, data: bytes) -> str:  # narrowed
+    return plugin.execute(data)
+```
+
+**Rules:**
+1. Wider types **MUST NOT** leak past the boundary — narrow at the earliest point (validation, parsing, factory function)
+2. Add a comment or docstring explaining why wider types are needed at this boundary
+3. Prototype code must include `# TODO: narrow types` markers
+4. Framework-dictated signatures are acceptable as-is — don't fight the framework's own type stubs
+
 ---
 
 ## Writing Mode: Coding Checklist
@@ -366,9 +460,9 @@ Apply every item below when writing or modifying any `.py` file. This is not asp
 
 ### Imports
 - [ ] No `from typing import Optional, Union, List, Dict, Tuple, Set` — use built-in generics + `|`
-- [ ] No `from typing import TYPE_CHECKING` — resolve cycles via shared types module or Protocol
-- [ ] No re-export in `__init__.py` — import from actual module path
-- [ ] No empty `__init__.py` — delete unless it contains real code or tools require it
+- [ ] Prefer direct imports; use `TYPE_CHECKING` only for typing-only imports, expensive imports, or third-party cycles (see §1)
+- [ ] No re-export in application code; library public API packages may re-export with `__all__` (see §2)
+- [ ] Package strategy is deliberate: regular packages (with `__init__.py`) or namespace packages (without) — no accidental empty files (see §3)
 - [ ] `from typing import Any` only when truly needed; prefer concrete types
 - [ ] Group imports: stdlib → third-party → local, separated by blank lines
 
@@ -381,6 +475,7 @@ Apply every item below when writing or modifying any `.py` file. This is not asp
 - [ ] Use TypedDict for known-schema dicts (config, API responses)
 - [ ] Use Literal for constrained string/int values
 - [ ] Use Protocol over ABC when no shared implementation is needed
+- [ ] Boundary layers (API, ORM, plugins) may use wider types — narrow before entering core domain (see §10)
 
 ### Logging
 - [ ] Use lazy `%s`/`%d` formatting in all `logger.*()` calls, never f-strings
@@ -391,7 +486,7 @@ Apply every item below when writing or modifying any `.py` file. This is not asp
 - [ ] Import order enforced by tool (`ruff check --select I` or `isort`)
 - [ ] No broad `except Exception` — narrow to specific types or justify with `# pylint: disable=W0718`
 - [ ] Unused arguments prefixed with `_` (reserved) or removed from full call chain (dead)
-- [ ] Pyright `venvPath` + `venv` set in `pyproject.toml` to resolve third-party imports
+- [ ] Pyright env configured: `venvPath`+`venv` for CLI Pyright; interpreter selection for Pylance (see §4)
 
 ### Comments & Docstrings
 - [ ] Public modules have a docstring (one-liner before imports)

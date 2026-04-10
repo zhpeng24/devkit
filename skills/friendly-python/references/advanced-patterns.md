@@ -4,9 +4,9 @@ Patterns for complex type annotation scenarios. Read when encountering advanced 
 
 ---
 
-## Resolving Circular Imports (WITHOUT TYPE_CHECKING)
+## Resolving Circular Imports
 
-`if TYPE_CHECKING` is discouraged — it creates two code paths and hides architectural issues. Use these alternatives:
+Prefer architectural solutions over `if TYPE_CHECKING`. It creates two code paths and can hide dependency issues. Use these alternatives first:
 
 ### Option 1: Shared types module (preferred)
 Extract types both modules depend on into a dedicated `types.py` or `_types.py`:
@@ -56,6 +56,26 @@ class Agent:  # satisfies AgentLike without inheriting
 
 ### Option 3: Restructure modules
 If A↔B cycle exists, the modules are too coupled. Merge them or extract shared logic into C.
+
+### Option 4: `TYPE_CHECKING` (last resort)
+When architectural fixes are impractical — the cycle involves third-party code you don't control, or the import is only needed for annotations and is expensive at runtime — `TYPE_CHECKING` is acceptable:
+
+```python
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pandas as pd  # heavy import, only needed for annotations
+
+def summarize(df: pd.DataFrame) -> dict[str, float]:
+    return {"mean": float(df.mean()), "std": float(df.std())}
+```
+
+**Conditions for using `TYPE_CHECKING`:**
+- The import is **typing-only** (never used at runtime in function bodies)
+- The imported module is **heavy or optional** (pandas, torch, tensorflow)
+- You've already considered Options 1–3 and they don't fit
+- Always combine with `from __future__ import annotations` or quoted forward references
 
 ---
 
