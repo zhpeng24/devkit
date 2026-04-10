@@ -209,7 +209,134 @@ except (ValueError, OSError, RuntimeError):
 - Library docs unclear? → catch the base class of likely errors (`OSError` for I/O, `ValueError` for parsing)
 - Genuinely need broad catch (plugin loading, teardown)? → `except Exception` + `# pylint: disable=W0718` with a comment
 
-### 8. Third-party library typing — file-level pragmatism
+### 8. Comments & Docstrings — Google style
+
+Types annotate *what*, docstrings explain *why* and *how*. Don't repeat type information in docstrings — let type annotations self-document signatures.
+
+**Language:** Prefer English for all comments and docstrings. English keeps the codebase accessible to international contributors, tools (linters, doc generators), and LLMs. Non-English is acceptable only in domain-specific terms that lose meaning in translation.
+
+#### When to write docstrings
+
+| Target | Rule |
+|---|---|
+| Public modules (non-`_` prefix) | Docstring **required** |
+| Public classes | Docstring **required** |
+| Public functions / methods | Docstring **required** |
+| `_private` / internal | **Optional** — add only when logic is non-obvious |
+| Dunder methods (`__init__`, `__repr__`, etc.) | **Skip** unless behavior is surprising |
+
+#### Module docstring
+
+One-liner at file top, before imports. Multi-line only when needed.
+
+```python
+"""Coordinate transforms for grid-based environments."""
+
+import math
+```
+
+#### Class docstring
+
+Describe purpose + key behaviors. List public attributes only if non-obvious from type annotations.
+
+```python
+class ReplayBuffer:
+    """Fixed-size circular buffer for experience replay.
+
+    Attributes:
+        capacity: Maximum number of transitions stored.
+    """
+```
+
+#### Function / method docstring (Google style)
+
+Only document what types don't already express:
+
+```python
+def find_path(
+    self,
+    start: tuple[int, int],
+    goal: tuple[int, int],
+    *,
+    allow_diagonal: bool = False,
+) -> list[tuple[int, int]] | None:
+    """Find shortest path using A* search.
+
+    Args:
+        start: Grid position to start from.
+        goal: Target grid position.
+        allow_diagonal: If True, allows 8-directional movement.
+
+    Returns:
+        Ordered list of positions from start to goal,
+        or None if no path exists.
+
+    Raises:
+        ValueError: If start or goal is outside grid bounds.
+    """
+```
+
+**Rules:**
+- **No type duplication** — `Args:` describes *meaning*, not types (`start: Grid position` not `start (tuple[int, int]): ...`)
+- **`Args:`** — required when ≥ 2 parameters or meaning non-obvious from name + type
+- **`Returns:`** — required when return value needs explanation beyond type annotation
+- **`Raises:`** — required for explicitly raised exceptions
+- **One-liner OK** for simple functions: `"""Return the Manhattan distance between two points."""`
+- **Imperative mood** for first line: "Find", "Return", "Calculate" (not "Finds", "Returns")
+
+#### Inline comments (`#`)
+
+Explain *why*, never *what* — code should be self-explanatory for *what*.
+
+```python
+# ✅ Explains WHY
+offset = 1  # compensate for 0-indexed grid in 1-indexed display
+
+# ❌ Restates WHAT (noise)
+offset = 1  # set offset to 1
+```
+
+- Place on same line or immediately above the code
+- One space after `#`
+- Never comment closing brackets / braces
+
+#### TODO / FIXME markers
+
+Standard format with actionable description — no bare `# TODO`:
+
+```python
+# TODO: replace dict[str, Any] with TypedDict once API schema stabilizes
+config: dict[str, Any] = load_config()
+
+# FIXME: race condition when two workers write to same file
+save_results(data)
+
+# Optional: include author / issue reference
+# TODO(zhpeng): narrow type after #123 lands
+```
+
+- `TODO` = planned improvement, `FIXME` = known bug / defect
+
+#### Anti-patterns (never do)
+
+| Anti-pattern | Fix |
+|---|---|
+| Commented-out code | Delete it — Git remembers |
+| `#---` / `#===` section dividers | Use functions / classes to structure |
+| Redundant docstring restating the signature | Skip the docstring or add real context |
+
+```python
+# ❌ Redundant — type annotation already documents this
+def add(a: int, b: int) -> int:
+    """Add a and b and return the result."""
+    return a + b
+
+# ✅ Trivial function — skip the docstring entirely
+def add(a: int, b: int) -> int:
+    return a + b
+```
+
+### 9. Third-party library typing — file-level pragmatism
 
 Libraries with incomplete stubs (matplotlib, pandas) produce waves of `reportUnknownMemberType`. Don't fight them per-line.
 
@@ -265,6 +392,15 @@ Apply every item below when writing or modifying any `.py` file. This is not asp
 - [ ] No broad `except Exception` — narrow to specific types or justify with `# pylint: disable=W0718`
 - [ ] Unused arguments prefixed with `_` (reserved) or removed from full call chain (dead)
 - [ ] Pyright `venvPath` + `venv` set in `pyproject.toml` to resolve third-party imports
+
+### Comments & Docstrings
+- [ ] Public modules have a docstring (one-liner before imports)
+- [ ] Public classes have a Google-style docstring (purpose + `Attributes:` if non-obvious)
+- [ ] Public functions / methods have a Google-style docstring (`Args:`, `Returns:`, `Raises:` as needed)
+- [ ] No type duplication in docstrings — describe meaning, not types
+- [ ] Inline comments explain *why*, never *what*
+- [ ] No commented-out code — delete it, Git remembers
+- [ ] TODO / FIXME markers include actionable description (no bare `# TODO`)
 
 ### Precision Hierarchy
 When annotating, always pick the most specific truthful type:
