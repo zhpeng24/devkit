@@ -7,6 +7,7 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 | Skill | Description |
 |-------|-------------|
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting (`ruff`), Pylint fix patterns |
+| **mihomo-proxy-setup** | User-space Mihomo proxy installer: Clash subscription, Web UI, dev tool wrappers (Cursor/Copilot/Claude), Linux + macOS |
 
 ## Installation
 
@@ -98,6 +99,18 @@ A comprehensive Python code cleanup skill that enforces:
 - **Pylint fix patterns** — unused arguments, broad exceptions, import ordering
 - **TypedDict / Protocol / Literal** over loose `dict` / `Any`
 
+### mihomo-proxy-setup
+
+A complete user-space proxy installer and manager:
+
+- **Mihomo (Clash.Meta)** binary — auto-detects OS and architecture
+- **Clash subscription** integration with auto-update (every 30 min)
+- **MetaCubeXD Web UI** panel for managing proxy rules
+- **Proxy wrappers** — `with-proxy`, `proxy-agent`, `proxy-copilot`, `proxy-claude`
+- **Service management** — systemd (Linux) / launchd (macOS) user services
+- **Uninstall** — full cleanup of all files, services, and configuration
+- **No root required** — everything runs in user space
+
 ### Skill Structure
 
 ```
@@ -108,6 +121,13 @@ skills/
       fix-patterns.md           # Before/after fix examples
       tool-codes.md             # Pyright/Pylint code reference
       advanced-patterns.md      # Complex type patterns
+  mihomo-proxy-setup/
+    SKILL.md                    # Installation/uninstall flow
+    references/
+      config-templates.md       # Config files and script templates
+      systemd-units.md          # Linux systemd service units
+      launchd-plist.md          # macOS launchd plist files
+      troubleshooting.md        # Common issues and fixes
 ```
 
 ## Updating
