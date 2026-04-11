@@ -140,6 +140,39 @@ if [ "$#" -eq 0 ]; then
   printf 'with-proxy: expected a command to run\n' >&2
   exit 64
 fi
+
+# Print proxy banner (to stderr so it doesn't interfere with stdout piping)
+_proxy_host="${HTTP_PROXY#http://}"
+_ctrl_port=$(grep '^external-controller:' "$HOME/.config/mihomo/overrides.yaml" 2>/dev/null | awk -F: '{print $NF}' || echo "29090")
+_secret=$(grep '^secret:' "$HOME/.config/mihomo/overrides.yaml" 2>/dev/null | awk '{print $2}')
+_node=""
+if [ -n "$_secret" ]; then
+  _node=$(curl -s --connect-timeout 1 -H "Authorization: Bearer $_secret" \
+    "http://127.0.0.1:${_ctrl_port}/proxies" 2>/dev/null \
+    | python3 -c "
+import json,sys
+try:
+    d=json.load(sys.stdin)['proxies']
+    seen=set()
+    cur='GLOBAL'
+    while cur in d and 'now' in d[cur] and cur not in seen:
+        seen.add(cur)
+        cur=d[cur]['now']
+    print(cur)
+except: pass
+" 2>/dev/null)
+fi
+
+if curl -so /dev/null --connect-timeout 1 "$HTTP_PROXY" 2>/dev/null; then
+  printf '\033[36m🌐 proxy → %s ✓\033[0m' "$_proxy_host" >&2
+else
+  printf '\033[33m🌐 proxy → %s ✗ (unreachable)\033[0m' "$_proxy_host" >&2
+fi
+if [ -n "$_node" ]; then
+  printf '  \033[35m📡 %s\033[0m' "$_node" >&2
+fi
+printf '  exec: %s\n' "$*" >&2
+
 exec "$@"
 ```
 
@@ -168,10 +201,12 @@ cursor_agent_usable() {
 }
 
 if cursor_usable; then
+  printf '\033[36m🔧 tool: cursor\033[0m\n' >&2
   exec "$WITH_PROXY" cursor "$@"
 fi
 
 if cursor_agent_usable; then
+  printf '\033[36m🔧 tool: cursor-agent\033[0m\n' >&2
   exec "$WITH_PROXY" cursor-agent "$@"
 fi
 
@@ -199,10 +234,12 @@ gh_copilot_usable() {
 }
 
 if command -v copilot >/dev/null 2>&1; then
+  printf '\033[36m🔧 tool: copilot\033[0m\n' >&2
   exec "$WITH_PROXY" copilot "$@"
 fi
 
 if gh_copilot_usable; then
+  printf '\033[36m🔧 tool: gh copilot\033[0m\n' >&2
   exec "$WITH_PROXY" gh copilot "$@"
 fi
 
@@ -229,6 +266,7 @@ if ! command -v claude >/dev/null 2>&1; then
   exit 127
 fi
 
+printf '\033[36m🔧 tool: claude\033[0m\n' >&2
 exec "$WITH_PROXY" claude "$@"
 ```
 
