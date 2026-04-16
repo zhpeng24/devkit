@@ -12,6 +12,8 @@ Devkit is a developer toolkit that provides coding skills for your AI agent. Ski
 | Skill | Description |
 |-------|------------|
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting, Pylint fixes |
+| **github-create-issue** | Structured GitHub issue creation with `gh` CLI — enforces template sections and consistent labeling |
+| **github-issue-workflow** | End-to-end issue development workflow — triage, develop, code review, ship |
 
 ## How Skills Work
 
@@ -21,9 +23,9 @@ Devkit is a developer toolkit that provides coding skills for your AI agent. Ski
 
 ## Invoking Skills
 
-- **Claude Code:** `Skill` tool → `devkit:friendly-python`
-- **Copilot CLI:** `skill` tool → `friendly-python`
-- **Cursor:** `/friendly-python` or skill auto-triggers
-- **Codex:** `skill` tool → `devkit/friendly-python`
+- **Claude Code:** `Skill` tool → `devkit:<skill-name>`
+- **Copilot CLI:** `skill` tool → `<skill-name>`
+- **Cursor:** `/<skill-name>` or skill auto-triggers
+- **Codex:** `skill` tool → `devkit/<skill-name>`
 - **Gemini CLI:** `activate_skill` tool
-- **OpenCode:** `skill` tool → `devkit/friendly-python`
+- **OpenCode:** `skill` tool → `devkit/<skill-name>`

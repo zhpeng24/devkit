@@ -8,6 +8,8 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 |-------|-------------|
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting (`ruff`), Pylint fix patterns |
 | **mihomo-proxy-setup** | User-space Mihomo proxy installer: Clash subscription, Web UI, dev tool wrappers (Cursor/Copilot/Claude), Linux + macOS |
+| **github-create-issue** | Structured GitHub issue creation with `gh` CLI — enforces background, impact, acceptance criteria sections and consistent labeling |
+| **github-issue-workflow** | End-to-end GitHub issue development workflow — triage, develop, code review, ship |
 
 ## Installation
 
@@ -111,6 +113,26 @@ A complete user-space proxy installer and manager:
 - **Uninstall** — full cleanup of all files, services, and configuration
 - **No root required** — everything runs in user space
 
+### github-create-issue
+
+A structured GitHub issue template skill that enforces:
+
+- **7-section template** — 背景, 已造成问题, 当前状态, 预期改动, 影响范围, 关联, 验收标准
+- **Standardized labels** — `bug`, `optimization`, `architecture`, `innovation`, `tech-debt`, `documentation`, `security`
+- **Title convention** — `[模块] 简述问题或改动`
+- **Section trimming** — auto-adapt required sections by issue type
+- **`gh` CLI execution** — creates labels if missing, generates full `gh issue create` command
+
+### github-issue-workflow
+
+An end-to-end development workflow skill that enforces:
+
+- **5-step cycle** — Triage → Plan → Develop → Review → Ship
+- **Overlap detection** — shared-file issues go sequential, independent issues go parallel
+- **Mandatory code review** — never skip even if "tests pass" or "changes are small"
+- **Commit discipline** — one commit per logical group, issue references, excluded tests documented
+- **Rationalization defense** — explicit counters for common shortcuts
+
 ### Skill Structure
 
 ```
@@ -128,6 +150,10 @@ skills/
       systemd-units.md          # Linux systemd service units
       launchd-plist.md          # macOS launchd plist files
       troubleshooting.md        # Common issues and fixes
+  github-create-issue/
+    SKILL.md                    # Issue creation template & workflow
+  github-issue-workflow/
+    SKILL.md                    # Issue development lifecycle
 ```
 
 ## Updating
