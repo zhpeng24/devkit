@@ -1,6 +1,6 @@
-# 产品需求 Issue 模板
+# Product Requirement Issue Template
 
-## 模板结构
+## Template Structure
 
 ```markdown
 ## 用户故事
@@ -42,53 +42,53 @@
 [P0-P3 + 理由]
 ```
 
-## 裁剪规则
+## Trimming Rules
 
-并非每个 issue 都需要全部 section。根据需求类型裁剪：
+Not every issue needs all sections. Trim based on requirement type:
 
-| 需求类型 | 可省略 |
-|---------|--------|
-| 简单功能 | 竞品/参考、边界与约束 |
-| 改进优化 | 用户故事（如果是内部改进）|
-| 大型功能 | 无，全部必填 |
-| 体验改善 | MVP 定义（如果不需要分期）|
+| Requirement Type | Can Omit |
+|-----------------|----------|
+| Simple feature | 竞品/参考, 边界与约束 |
+| Improvement / Optimization | 用户故事 (if internal improvement) |
+| Large feature | None, all required |
+| UX improvement | MVP 定义 (if no phasing needed) |
 
-## 标签体系
+## Label System
 
-提交前检查标签是否存在：`gh label list | grep <label>`，不存在则创建：`gh label create <label> --color <color> --description "<desc>"`
+Before submission, check if labels exist: `gh label list | grep <label>`. Create if missing: `gh label create <label> --color <color> --description "<desc>"`
 
-### 类型标签
+### Type Labels
 
-| 标签 | 颜色 | 说明 |
-|------|------|------|
-| `feature` | `1d76db` | 新功能需求 |
-| `enhancement` | `0e8a16` | 已有功能改进 |
-| `ux` | `f9d0c4` | 用户体验改善 |
-| `needs-design` | `d4c5f9` | 需要进一步设计 |
+| Label | Color | Description |
+|-------|-------|-------------|
+| `feature` | `1d76db` | New feature request |
+| `enhancement` | `0e8a16` | Improvement to existing feature |
+| `ux` | `f9d0c4` | User experience improvement |
+| `needs-design` | `d4c5f9` | Requires further design |
 
-### 优先级标签
+### Priority Labels
 
-| 标签 | 颜色 | 说明 |
-|------|------|------|
-| `P0-critical` | `b60205` | 最高优先级 |
-| `P1-important` | `d93f0b` | 高优先级 |
-| `P2-normal` | `fbca04` | 正常优先级 |
-| `P3-nice-to-have` | `c5def5` | 低优先级 |
+| Label | Color | Description |
+|-------|-------|-------------|
+| `P0-critical` | `b60205` | Highest priority |
+| `P1-important` | `d93f0b` | High priority |
+| `P2-normal` | `fbca04` | Normal priority |
+| `P3-nice-to-have` | `c5def5` | Low priority |
 
-## Title 规范
+## Title Convention
 
-格式：`[模块] 简述需求`
+Format: `[模块] 简述需求`
 
-示例：
+Examples:
 - `[auth] 支持第三方 OAuth 登录`
 - `[editor] 添加 Markdown 实时预览`
 - `[skills] 产品经理式需求分析流程`
 
-## 提交命令
+## Submission Command
 
 ```bash
 gh issue create \
-  --title "[模块] 简述" \
+  --title "[模块] 简述需求" \
   --label "label1,label2" \
   --body "$(cat <<'EOF'
 ## 用户故事
@@ -127,10 +127,10 @@ EOF
 )"
 ```
 
-## 多 Issue 拆分
+## Multi-Issue Splitting
 
-当需求被拆分为多个 issue 时：
+When a requirement is split into multiple issues:
 
-1. 列出所有子需求的标题和简述，用户确认
-2. 逐一创建，每个 issue 的正文末尾添加「关联」section，互相引用 issue 编号
-3. 全部创建后汇总返回所有 URL
+1. List all sub-requirement titles and summaries for user confirmation
+2. Create them one by one, adding a "关联" section at the end of each issue body to cross-reference issue numbers
+3. After all are created, return a summary with all URLs

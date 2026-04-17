@@ -1,85 +1,85 @@
-# 追问框架
+# Question Framework
 
-## 追问维度
+## Clarification Dimensions
 
-按以下顺序推进，根据上下文自适应跳过不必要的维度。
+Progress through the following in order, adaptively skipping unnecessary dimensions based on context.
 
-| 阶段 | 维度 | 核心问题 | 何时跳过 |
-|------|------|---------|---------|
-| 1 | 核心意图 | 你想解决什么问题？/ 你想实现什么？ | 永不跳过 |
-| 2 | 目标用户 | 谁会用这个功能？在什么情况下用？ | 用户已明确说明时 |
-| 3 | 用户场景 | 描述一个典型的使用流程 | 永不跳过 |
-| 4 | 痛点/现状 | 现在是怎么做的？哪里不好？ | 全新功能且无替代方案时 |
-| 5 | 期望行为 | 理想情况下它应该怎么工作？ | 永不跳过 |
-| 6 | 边界情况 | 异常情况怎么处理？有什么限制？ | 简单需求 |
-| 7 | 与现有功能关系 | 会影响或依赖哪些已有功能？ | 完全独立的新功能 |
-| 8 | 竞品/参考 | 有没有见过类似的好的实现？ | 用户明确无参考时 |
-| 9 | 优先级与范围 | 这件事多紧急？MVP 包含什么？ | 永不跳过 |
+| Phase | Dimension | Core Question | When to Skip |
+|-------|-----------|--------------|--------------|
+| 1 | Core Intent | What problem are you trying to solve? / What do you want to achieve? | Never skip |
+| 2 | Target Users | Who will use this feature? Under what circumstances? | When user has clearly stated |
+| 3 | User Scenarios | Describe a typical usage flow | Never skip |
+| 4 | Pain Points / Current State | How is it done now? What's wrong with it? | Brand-new feature with no existing alternative |
+| 5 | Expected Behavior | Ideally, how should it work? | Never skip |
+| 6 | Edge Cases | How should exceptions be handled? Any limitations? | Simple requirements |
+| 7 | Relationship with Existing Features | Which existing features will it affect or depend on? | Completely independent new feature |
+| 8 | Competitors / References | Have you seen a similar good implementation? | When user explicitly has no references |
+| 9 | Priority & Scope | How urgent is this? What does the MVP include? | Never skip |
 
-## 策略规则
+## Strategy Rules
 
-### 1. 多选项优先
+### 1. Prefer Multiple-Choice Options
 
-每个问题尽量提供 A/B/C/D 选项，降低用户认知负担。选项应基于项目上下文和常见模式生成，而非泛泛而谈。
+Provide A/B/C/D options for each question whenever possible to reduce cognitive load. Options should be generated based on project context and common patterns, not generic placeholders.
 
-**好的例子：**
-> 这个功能的目标用户是谁？
-> - A) 项目的最终用户
-> - B) 开发团队内部使用
-> - C) 第三方集成开发者
-> - D) 以上皆有，但优先级不同
+**Good example:**
+> Who is the target user for this feature?
+> - A) End users of the project
+> - B) Internal development team
+> - C) Third-party integration developers
+> - D) All of the above, but with different priorities
 
-**坏的例子：**
-> 请描述目标用户。
+**Bad example:**
+> Please describe the target users.
 
-### 2. 利用项目上下文
+### 2. Leverage Project Context
 
-结合阶段 1 扫描到的代码和 issues，提出具体的选项而非抽象提问。
+Combine code and issues discovered in Phase 1 to offer specific options rather than abstract questions.
 
-**好的例子：**
-> 我看到项目有 `auth`、`editor`、`pipeline` 三个核心模块，这个需求主要影响哪个？
-> - A) auth — 用户认证相关
-> - B) editor — 编辑器功能
-> - C) pipeline — 数据处理流程
-> - D) 跨模块，需要新建模块
+**Good example:**
+> I see the project has three core modules: `auth`, `editor`, and `pipeline`. Which one does this requirement mainly affect?
+> - A) auth — user authentication
+> - B) editor — editor functionality
+> - C) pipeline — data processing flow
+> - D) Cross-module, needs a new module
 
-**坏的例子：**
-> 这个需求会影响哪些模块？
+**Bad example:**
+> Which modules will this requirement affect?
 
-### 3. 渐进深入
+### 3. Progressive Depth
 
-前 3 个维度（核心意图、目标用户、用户场景）快速建立基本画面。后续维度在此基础上逐步补充细节。不要在用户还没说清楚"想做什么"的时候就问"边界情况"。
+The first 3 dimensions (core intent, target users, user scenarios) quickly establish the basic picture. Subsequent dimensions build on that with more detail. Don't ask about "edge cases" before the user has clearly explained "what they want to do."
 
-### 4. 自适应退出
+### 4. Adaptive Exit
 
-当收集到的信息已经足够填充 issue 模板的必填项（用户故事、背景与动机、用户场景、预期行为、验收标准）时，主动提出：
+When enough information has been collected to fill the required fields of the issue template (user story, background & motivation, user scenarios, expected behavior, acceptance criteria), proactively suggest:
 
-> "我觉得信息已经够了，要进入整理阶段吗？还是你觉得还有什么重要的没提到？"
+> "I think we have enough information to draft the issue. Ready to move to the drafting phase? Or is there anything important we haven't covered?"
 
-不要机械地问完所有 9 个维度。
+Don't mechanically go through all 9 dimensions.
 
-### 5. 拆分检测
+### 5. Split Detection
 
-追问过程中如果发现用户描述的其实是 2+ 个独立需求（迹象：多个不同的用户场景、多个不相关的功能点、"另外还想做..."），在当前问题结束后立即提出拆分建议：
+If during clarification you discover the user is actually describing 2+ independent requirements (signs: multiple distinct user scenarios, multiple unrelated features, "also, I'd like to..."), suggest splitting immediately after the current question:
 
-> "你刚才提到的其实包含两个独立的需求：X 和 Y。我建议分成两个 issue，这样各自可以独立排期和验收。你觉得呢？要先聚焦哪一个？"
+> "What you've described actually contains two independent requirements: X and Y. I'd suggest splitting them into two issues so each can be scoped and verified independently. What do you think? Which one should we focus on first?"
 
-## 追问风格
+## Questioning Style
 
-- **像同事聊天，不像填表** —— 自然对话，不是机械问答
-- **复述确认** —— 对用户的回答做简短复述，确认理解正确后再问下一个问题
-- **不接受模糊** —— 如果用户的回答模糊（"大概就是这样"、"差不多"），用具体化的追问帮助用户想清楚，而非直接接受
-- **适时总结** —— 每问完 3-4 个维度后，用 2-3 句话总结当前理解，让用户确认方向是否正确
+- **Like a colleague chat, not a form** — natural conversation, not mechanical Q&A
+- **Restate to confirm** — briefly restate the user's answer and confirm understanding before asking the next question
+- **Don't accept vagueness** — if the user's answer is vague ("something like that", "more or less"), ask concrete follow-ups to help them think it through rather than accepting it
+- **Summarize periodically** — after every 3-4 dimensions, summarize current understanding in 2-3 sentences and let the user confirm direction
 
-## 模糊回答的处理示例
+## Handling Vague Answers — Example
 
-**用户说：** "就是想让它更好用一点"
+**User says:** "I just want to make it better"
 
-**不要这样做：** 直接接受，继续下一个问题
+**Don't:** Accept it and move to the next question
 
-**应该这样做：**
-> 你说"更好用"，可以具体说说现在哪里不好用吗？
-> - A) 操作步骤太多，需要简化流程
-> - B) 响应太慢，需要性能优化
-> - C) 信息展示不清晰，需要改善 UI
-> - D) 其他 —— 请描述一下具体的不便之处
+**Do:**
+> When you say "better," can you be more specific about what's not working well right now?
+> - A) Too many steps, need to simplify the workflow
+> - B) Too slow, need performance optimization
+> - C) Information display is unclear, need UI improvements
+> - D) Other — please describe the specific inconvenience
