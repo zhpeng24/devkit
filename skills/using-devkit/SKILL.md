@@ -14,6 +14,7 @@ Devkit is a developer toolkit that provides coding skills for your AI agent. Ski
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting, Pylint fixes |
 | **github-create-issue** | Structured GitHub issue creation with `gh` CLI — enforces template sections and consistent labeling |
 | **github-issue-workflow** | End-to-end issue development workflow — triage, develop, code review, ship |
+| **github-product-manager** | Product manager-style requirement analysis — refines ideas through Q&A and produces structured product requirement GitHub issues |
 
 ## How Skills Work
 
