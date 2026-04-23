@@ -6,6 +6,7 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 
 | Skill | Description |
 |-------|-------------|
+| **using-dev** | Developer entry-point: detects task level (L0-L3) and orchestrates `friendly-*`, `github-*`, and superpowers skills end-to-end |
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting (`ruff`), Pylint fix patterns |
 | **mihomo-proxy-setup** | User-space Mihomo proxy installer: Clash subscription, Web UI, dev tool wrappers (Cursor/Copilot/Claude), Linux + macOS |
 | **github-create-issue** | Structured GitHub issue creation with `gh` CLI — enforces background, impact, acceptance criteria sections and consistent labeling |
@@ -53,6 +54,8 @@ claude plugins install devkit
 git clone https://github.com/zhpeng24/devkit.git ~/.cursor/plugins/local/devkit
 # Restart Cursor to detect the plugin
 ```
+
+Cursor loads the plugin for agent use. In Cursor 4.17, plugin skills may auto-trigger from natural language instead of appearing as slash commands.
 
 ### GitHub Copilot CLI
 
