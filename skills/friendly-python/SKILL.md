@@ -275,7 +275,37 @@ except (ValueError, OSError, RuntimeError):
 
 Types annotate *what*, docstrings explain *why* and *how*. Don't repeat type information in docstrings — let type annotations self-document signatures.
 
-**Language:** Prefer English for all comments and docstrings. English keeps the codebase accessible to international contributors, tools (linters, doc generators), and LLMs. Non-English is acceptable only in domain-specific terms that lose meaning in translation.
+**Language: English by default — always.**
+
+All comments and docstrings **MUST** be written in English, regardless of the operating system locale, the user's chat language, or the surrounding natural-language context. Do **not** mirror the user's chat language into code comments.
+
+The only exception: the user **explicitly** asks for another language (e.g., "用中文写注释", "comments in Chinese"). In that case, follow the request for that session.
+
+Rationale: English keeps the codebase accessible to international contributors, static-analysis tools, doc generators, and LLMs; mixed-language comments fragment the codebase over time.
+
+**Style: concise and signal-dense.**
+
+Every comment must earn its line. Strip filler, state the constraint or intent, and stop.
+
+- Prefer **one short sentence** or a fragment over a paragraph.
+- Lead with the **key requirement / constraint / "why"** — not background narration.
+- Drop articles ("the", "a") and pleasantries when they don't change meaning.
+- Avoid hedging ("maybe", "I think", "we could") — comments are assertions.
+- No decorative wording, no emoji, no restating the obvious.
+
+```python
+# ❌ Verbose, narrates what the code does
+# Here we are going to loop over the list of users that we fetched
+# from the database in the previous step, and for each one we will
+# check whether they are active or not.
+for user in users:
+    if user.active: ...
+
+# ✅ Concise — only the non-obvious constraint
+# Skip soft-deleted users; `active` flag is set lazily by the nightly job.
+for user in users:
+    if user.active: ...
+```
 
 #### When to write docstrings
 
@@ -508,6 +538,8 @@ Apply every item below when writing or modifying any `.py` file. This is not asp
 - [ ] Pyright env configured: `venvPath`+`venv` for CLI Pyright; interpreter selection for Pylance (see §4)
 
 ### Comments & Docstrings
+- [ ] **All comments and docstrings written in English** — never mirror chat/system language; only switch when user explicitly requests another language (see §8)
+- [ ] **Concise and signal-dense** — one short sentence or fragment; lead with the constraint/intent, no narration, no filler (see §8)
 - [ ] Public modules have a docstring (one-liner before imports)
 - [ ] Public classes have a Google-style docstring (purpose + `Attributes:` if non-obvious)
 - [ ] Public functions / methods have a Google-style docstring (`Args:`, `Returns:`, `Raises:` as needed)
