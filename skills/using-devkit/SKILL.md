@@ -9,8 +9,11 @@ Devkit is a developer toolkit that provides coding skills for your AI agent. Ski
 
 ## Available Skills
 
+> **开发场景首选：** 直接喊"开干"或描述开发任务（写需求 / 改 bug / 重构 等），`using-dev` 会按等级自动编排所有需要的子 skill。
+
 | Skill | Description |
 |-------|------------|
+| **using-dev** | 开发总入口：根据任务复杂度（L0-L3）自动编排 `friendly-*`、`github-*`、superpowers 系列 skills，覆盖从"改 typo"到"架构级新功能"的全光谱开发场景 |
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting, Pylint fixes |
 | **github-create-issue** | Structured GitHub issue creation with `gh` CLI — enforces template sections and consistent labeling |
 | **github-issue-workflow** | End-to-end issue development workflow — triage, develop, code review, ship |
