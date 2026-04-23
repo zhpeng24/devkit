@@ -26,7 +26,7 @@ Devkit is a developer toolkit that provides coding skills for your AI agent. Ski
 
 - **Claude Code:** `Skill` tool → `devkit:<skill-name>`
 - **Copilot CLI:** `skill` tool → `<skill-name>`
-- **Cursor:** `/<skill-name>` or skill auto-triggers
+- **Cursor:** use natural language; skills auto-trigger when relevant and may not appear as slash commands
 - **Codex:** `skill` tool → `devkit/<skill-name>`
 - **Gemini CLI:** `activate_skill` tool
 - **OpenCode:** `skill` tool → `devkit/<skill-name>`

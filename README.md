@@ -54,6 +54,8 @@ git clone https://github.com/zhpeng24/devkit.git ~/.cursor/plugins/local/devkit
 # Restart Cursor to detect the plugin
 ```
 
+Cursor loads the plugin for agent use. In Cursor 4.17, plugin skills may auto-trigger from natural language instead of appearing as slash commands.
+
 ### GitHub Copilot CLI
 
 ```bash
