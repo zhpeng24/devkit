@@ -1,11 +1,36 @@
 ---
 name: github-create-issue
-description: Use when creating GitHub issues for bugs, features, architecture changes, or optimizations. Ensures structured sections (background, impact, current state, expected changes, scope, acceptance criteria) and consistent labeling via gh CLI.
+description: Use when a GitHub issue needs to be created for a bug, feature, architecture change, optimization, documentation, security, or tech-debt item.
 ---
 
 # Create Issue
 
 Structured GitHub issue creation with `gh issue create`. Every issue answers: **为什么要做、造成了什么后果、现在什么样、要改成什么样、影响多大、怎么验收**。
+
+## Quality Gate
+
+Do not create the issue until all checks pass:
+
+- **Single outcome:** one bug, one behavior change, one cleanup theme, or one architectural decision.
+- **Bounded scope:** affected modules/files are named or discoverable from the body.
+- **Enough context:** the current state includes evidence, examples, paths, screenshots, logs, or reproduction notes when available.
+- **Actionable change:** expected changes are specific enough for a developer to start.
+- **Verifiable acceptance:** every acceptance criterion is observable by test, command, UI check, or review checklist.
+- **Traceability:** related PRs, issues, commits, ADRs, or user reports are linked when known.
+
+If any check fails, ask a clarifying question or split the issue before creation.
+
+## Split Rules
+
+Split instead of creating one broad issue when any condition is true:
+
+- The request contains 2+ independent user scenarios.
+- Different parts could ship independently.
+- The change spans unrelated modules or labels.
+- Acceptance criteria can pass independently.
+- The issue mixes discovery/design with implementation.
+
+Use a parent tracking issue only when coordination matters. Child issues must still be implementation-ready and independently verifiable.
 
 ## Template
 
@@ -74,9 +99,10 @@ Structured GitHub issue creation with `gh issue create`. Every issue answers: **
 
 ## 执行流程
 
-1. 确认标签存在：`gh label list | grep <label>` → 不存在则 `gh label create <label> --color <color> --description "<desc>"`
-2. 填充模板各 section
-3. 生成命令：
+1. Run the Quality Gate and Split Rules.
+2. 确认标签存在：`gh label list | grep <label>` → 不存在则 `gh label create <label> --color <color> --description "<desc>"`
+3. 填充模板各 section
+4. 生成命令：
 
 ```bash
 gh issue create \
@@ -107,4 +133,4 @@ EOF
 )"
 ```
 
-4. 确认 issue 创建成功后返回 URL
+5. 确认 issue 创建成功后返回 URL

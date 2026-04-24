@@ -7,7 +7,7 @@
 按下列顺序判定项目主语言：
 
 1. **Manifest 文件**（最强信号）：
-   - `pyproject.toml` / `setup.py` / `requirements.txt` → Python
+   - `pyproject.toml` / `uv.lock` / `poetry.lock` / `pdm.lock` / `Pipfile` / `setup.py` / `setup.cfg` / `requirements.txt` / `tox.ini` / `noxfile.py` → Python
    - `package.json` / `tsconfig.json` → TypeScript / JavaScript
    - `go.mod` → Go
    - `Cargo.toml` → Rust
@@ -15,7 +15,7 @@
 
 2. **源码后缀统计**（manifest 不明确时）：
    ```bash
-   find . -type f \( -name "*.py" -o -name "*.ts" -o -name "*.go" -o -name "*.rs" \) \
+   find . -type f \( -name "*.py" -o -name "*.pyi" -o -name "*.ts" -o -name "*.go" -o -name "*.rs" \) \
      -not -path "./node_modules/*" -not -path "./.venv/*" \
      | sed 's/.*\.//' | sort | uniq -c | sort -rn | head -3
    ```
@@ -76,6 +76,7 @@
 | 文件类型 | 规范来源 |
 |---------|---------|
 | `*.py` | `friendly-python` |
+| `*.pyi` | `friendly-python` + stub-specific typing rules |
 | `*.ts` / `*.tsx` / `*.js` / `*.jsx` | ESLint / Prettier |
 | `*.go` | `gofmt` + `golangci-lint` |
 | `*.rs` | `rustfmt` + `clippy` |

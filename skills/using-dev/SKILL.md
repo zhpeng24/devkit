@@ -1,6 +1,6 @@
 ---
 name: using-dev
-description: "Developer entry-point. Auto-trigger when the user asks to write, change, fix, refactor, debug, optimize, or implement code. Common phrases: 写需求、改 bug、修复、新功能、加个功能、重构、优化、debug、实现、开发、做个功能、write feature、fix bug、refactor、implement、build feature. Explicit commands: 开干、走完整开发流程、/dev. Detects task level (L0-L3) and orchestrates friendly-python, github-create-issue, github-issue-workflow, brainstorming, writing-plans, executing-plans, architecture-designer, self-improving. Do NOT trigger for read-only questions like 解释这段代码 / 看 X 是什么 / 这个函数干嘛的."
+description: "Use when the user asks to write, change, fix, refactor, debug, optimize, implement, or build code in a repository."
 ---
 
 # Using Dev
@@ -73,7 +73,7 @@ description: "Developer entry-point. Auto-trigger when the user asks to write, c
 3. gh auth 可用？       → 否 → 提示登录，拒绝则降级
 ```
 
-**降级模式行为：** 跳过所有 `gh` 调用与 issue/PR 流程，正常走 `brainstorming` / `writing-plans` + 编码 + 本地 commit 规范。不为 GitLab/Gitee 写专门适配——开发流程本质相通，issue/MR 由用户在对应平台手动操作即可。
+**降级模式行为：** 跳过所有 `gh` 调用，保留 issue 文本追踪、本地分支/commit 规范、review checklist、测试与验收标准。不为 GitLab/Gitee 写专门适配——开发流程本质相通，issue/MR 由用户在对应平台手动操作即可。
 
 ## Commit Message 规范
 
@@ -92,7 +92,7 @@ Closes #N    # 完整模式有；降级模式省略
 | 等级 | 收尾动作 |
 |------|----------|
 | L0 | 改完 → `friendly-*` 自检 → `git commit`，结束 |
-| L1 | 跑测试 → `code-reviewer` subagent → commit + push → `gh pr create`（或 close issue） |
+| L1 | 跑测试 → review agent 或本地 review checklist → commit + push → `gh pr create`（或降级为本地交付说明） |
 | L2 | 同 L1 + **询问轻量复盘**："做个 5 分钟复盘吗？/ skip" |
 | L3 | 同 L1 + **默认触发 `self-improving` 复盘** + 询问是否写 ADR（`docs/adr/YYYYMMDD-<topic>.md`） |
 

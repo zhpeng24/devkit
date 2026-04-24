@@ -6,11 +6,13 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 
 | Skill | Description |
 |-------|-------------|
+| **using-devkit** | Devkit entry-point: helps agents discover and invoke the available devkit skills |
 | **using-dev** | Developer entry-point: detects task level (L0-L3) and orchestrates `friendly-*`, `github-*`, and superpowers skills end-to-end |
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting (`ruff`), Pylint fix patterns |
 | **mihomo-proxy-setup** | User-space Mihomo proxy installer: Clash subscription, Web UI, dev tool wrappers (Cursor/Copilot/Claude), Linux + macOS |
 | **github-create-issue** | Structured GitHub issue creation with `gh` CLI — enforces background, impact, acceptance criteria sections and consistent labeling |
 | **github-issue-workflow** | End-to-end GitHub issue development workflow — triage, develop, code review, ship |
+| **github-product-manager** | Product requirement analysis: clarifies feature ideas and turns scoped requirements into GitHub issues |
 
 ## Installation
 
@@ -19,11 +21,11 @@ One-liner install — pick your platform:
 **macOS / Linux:**
 
 ```bash
-# Interactive menu
-curl -fsSL https://raw.githubusercontent.com/zhpeng24/devkit/main/scripts/install.sh | bash
-
-# Or specify a platform directly
+# curl cannot show the interactive menu; specify a platform directly
 curl -fsSL https://raw.githubusercontent.com/zhpeng24/devkit/main/scripts/install.sh | bash -s -- claude
+
+# Local clone interactive menu
+bash scripts/install.sh
 ```
 
 **Windows (PowerShell):**

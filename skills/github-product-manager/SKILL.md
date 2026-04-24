@@ -1,6 +1,6 @@
 ---
 name: github-product-manager
-description: Analyze user requirements through multi-round dialogue, ask clarifying questions, and produce structured product requirement GitHub issues. Triggers: "I want to build", "add a feature", "users need", "requirement analysis", "product requirement", "feature request", "analyze requirement"
+description: Use when a user describes a product requirement, feature idea, user need, or ambiguous request that should become one or more GitHub issues.
 ---
 
 # Product Manager
@@ -60,6 +60,8 @@ Read `references/question-framework.md` and follow the question framework for de
 
 **Split detection:** If the user's description contains 2+ independent requirements, immediately suggest splitting and let the user choose which to focus on first.
 
+**MVP slicing:** For feature requests, define the smallest shippable behavior that proves value. Anything not required for that behavior becomes a follow-up issue, not acceptance criteria in the MVP issue.
+
 ### Phase 3: Requirement Synthesis & Issue Draft
 
 Read `references/issue-template.md` and populate the template with the analysis results:
@@ -68,6 +70,7 @@ Read `references/issue-template.md` and populate the template with the analysis 
 2. Select appropriate type and priority labels from the label system
 3. Generate title following the convention: `[模块] 简述需求`
 4. If splitting is needed, prepare separate drafts for each sub-issue
+5. Run the github-create-issue Quality Gate before previewing any draft
 
 ### Phase 4: User Preview & Revision
 
@@ -117,3 +120,5 @@ EOF
 - About to skip preview and submit directly → go back to Phase 4
 - User's answers contradict each other → point out the contradiction and help clarify
 - Requirement highly overlaps with an existing open issue → inform the user and suggest adding to the existing issue instead of creating a new one
+- Draft contains multiple independently shippable outcomes → split before preview
+- Acceptance criteria cannot be verified → clarify before preview

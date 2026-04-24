@@ -1,6 +1,6 @@
 ---
 name: github-issue-workflow
-description: Use when pulling GitHub issues and developing them end-to-end — triage, develop, review, ship. Handles both engineering issues (from github-create-issue) and product requirement issues (from github-product-manager). Triggers on "处理 issue", "拉取 issue", "develop issues", "work on issues", "close issues".
+description: Use when working on one or more existing GitHub issues in a repository.
 ---
 
 # GitHub Issue Workflow
@@ -8,6 +8,24 @@ description: Use when pulling GitHub issues and developing them end-to-end — t
 Pull → Triage → Develop → Review → Ship. Every issue goes through the full cycle. **No shortcut from "tests pass" to "commit".**
 
 仓库内 issue 可能来自 `github-create-issue`（工程类）或 `github-product-manager`（PM 类），两套模板与标签不同。**Triage 前先读 `references/issue-sources.md` 识别来源**，按对应模板字段提取实现依据。
+
+## Capability Modes
+
+Check capabilities before planning:
+
+```bash
+git rev-parse --git-dir 2>/dev/null
+git remote -v | grep -E "github\.com"
+gh auth status 2>&1
+```
+
+| Mode | Conditions | Behavior |
+|---|---|---|
+| Full GitHub | git repo + GitHub remote + `gh` auth | Use `gh issue develop`, push branch, open PR |
+| GitHub degraded | GitHub remote but `gh` unavailable/unauthenticated | Use local branch, reference issue in commits/PR body, tell user which `gh` action was skipped |
+| Local fallback | No GitHub remote | Use local branch/commit discipline; keep issue references in text only |
+
+If a review agent or subagent is unavailable, use the local review checklist in the Review phase. Tool unavailability changes the route, not the quality bar.
 
 ## Workflow
 
@@ -26,7 +44,7 @@ For each issue：
 
 | Overlap | Strategy |
 |---------|----------|
-| No shared files | Parallel subagents |
+| No shared files | Parallel work if the platform/user allows it; otherwise sequential |
 | Shared files | Sequential, dependency-first |
 | Unsure | Read both issues' code scope, then decide |
 
@@ -47,7 +65,7 @@ For each issue：
 - Create TodoWrite，**一个 issue 一项**
 - **PM issue 拆分**：feature 类范围较大，先按 body 中的 `MVP 定义` 切成最小切片，每片在 TodoWrite 中作为子项；后续迭代部分作为 follow-up issue 记录而不是塞进当前 PR
 
-#### 2.1 创建分支并关联 issue（必做）
+#### 2.1 创建分支并关联 issue（Full GitHub mode）
 
 **用 `gh issue develop` 而不是 `git checkout -b`** —— 它会同时建分支、推到 remote、并把分支挂到 issue 的 Development 面板，PR 合入时 GitHub 会自动关闭 issue。
 
@@ -71,6 +89,8 @@ gh issue develop <N> --list
 - 分支已存在时再次执行 `gh issue develop <N> --name <existing>` 只追加关联，不会重建分支
 - 如果忘了用 `gh issue develop`，已经用 `git checkout -b` 建好的分支可补关联：`gh issue develop <N> --name <existing-branch>`
 
+**Degraded/local fallback:** create a branch with the same naming convention (`fix/issue-N`, `feat/issue-N`, or topical name), then keep `Closes #N` / `Refs #N` in commit and PR text. Document that GitHub Development linking was unavailable.
+
 ### 3. Develop
 
 每个 implementation MUST：
@@ -78,21 +98,31 @@ gh issue develop <N> --list
 1. **读 issue body**，按来源提取实现依据（字段对照见 `references/issue-sources.md`）
 2. Read affected code before editing
 3. Make changes（PM 类严格只实现 MVP 范围内的能力；超出部分留 follow-up）
-4. Run relevant tests (`pytest tests/ -v --tb=short`) — document any exclusions with reason in commit body
-5. Verify architecture guard tests pass (`pytest tests/test_architecture.py`)
+4. Run relevant tests using the project's native runner — document any exclusions with reason in commit body
+5. Verify architecture guard tests pass if they exist
 6. 逐条对照 `验收标准` checklist 自检
 
-**Parallel** (independent issues): dispatch subagent per issue — recommended for 2+ issues with no shared files.
+Python projects: use `friendly-python/references/project-workflow.md` to choose `uv run pytest`, `poetry run pytest`, `python -m pytest`, tox, nox, or fallback syntax checks.
+
+**Parallel** (independent issues): dispatch separate workers only when the platform and user allow it; otherwise keep sequential.
 **Sequential** (dependent issues): implement in priority order in main workspace. Never parallelize shared-file issues.
 
 ### 4. Review
 
 **MANDATORY — do NOT skip even if all tests pass.**
 
-Dispatch `code-reviewer` subagent with：
+Preferred: dispatch a review agent with：
 - Git diff (`git diff HEAD~1` or `git diff main...HEAD`)
 - Original issue body（完整粘贴）+ 来源对应的关键字段（见 `references/issue-sources.md` 的 "Code Review 上下文"）
 - Architecture invariants
+
+If no review agent is available, perform local review:
+
+- Diff matches the issue scope and MVP only
+- Acceptance criteria are all checked
+- Tests or documented verification cover the changed behavior
+- No unrelated refactors, formatting churn, secrets, debug logs, or broad suppressions
+- Public API, migration, and packaging changes are documented
 
 Fix critical/important findings. Re-run tests after fixes.
 
@@ -111,6 +141,8 @@ gh pr create --title "..." --body "..."
 gh issue close N --comment "Fixed in <sha>: <summary>"
 ```
 
+Degraded/local fallback: if push or `gh pr create` is unavailable, leave the branch ready locally and report the exact command the user should run.
+
 PM 类 issue 关闭时，若仅完成 MVP，需在 close comment 中列出延后到 follow-up issue 的项目并附 issue 号。
 
 ## Commit Discipline
@@ -125,7 +157,7 @@ PM 类 issue 关闭时，若仅完成 MVP，需在 close comment 中列出延后
 
 ## Red Flags — STOP
 
-- About to commit without code review → dispatch `code-reviewer` first
+- About to commit without review → run review agent or local review checklist first
 - About to parallelize issues that share files → switch to sequential
 - About to skip tests "because only docs changed" → run them anyway
 - 用 `git checkout -b` 直接建分支，没走 `gh issue develop` → 分支不会出现在 issue Development 面板，补一次 `gh issue develop <N> --name <branch>` 关联
@@ -146,3 +178,4 @@ PM 类 issue 关闭时，若仅完成 MVP，需在 close comment 中列出延后
 | "P3 也很简单，先做完算了" | 低优先级先做会挤占 P0/P1 时间窗口，按标签排 |
 | "PM 模板字段太多，挑重要的看就行" | `验收标准` 必读，`用户场景` / `MVP 定义` 是判定"做对没/做多了没"的唯一依据 |
 | "`git checkout -b` 也能建分支，何必用 `gh issue develop`" | 前者不写入 issue Development 面板，issue 与分支失去自动追溯；PR 合入时也不会自动 close issue |
+| "`gh` 不可用，所以 issue 流程做不了" | 降级到本地分支与 commit traceability；质量门禁仍保留 |

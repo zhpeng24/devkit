@@ -1,6 +1,6 @@
 ---
 name: friendly-python
-description: "Production-oriented Python coding standards focused on explicit typing, predictable imports, automated formatting, and maintainable structure. Apply to Python code creation, modification, review, and diagnostic cleanup. Triggers on: Python file creation or modification, writing Python code, editing .py files, implementing features in Python, refactoring Python, fixing diagnostics, type annotations, code review."
+description: "Use when writing, editing, reviewing, or fixing diagnostics in Python codebases."
 ---
 
 # Python Code Standards
@@ -19,6 +19,16 @@ This skill operates in two modes. Detect which applies and follow accordingly:
 | **Cleanup** | User shares diagnostics or asks to fix warnings | Follow Phase 0–6 diagnostic workflow below |
 
 **Writing mode is the default.** Every `.py` file you create or edit must conform to these standards.
+
+## Fast Path
+
+1. Detect project tooling before choosing commands: `uv.lock`, `poetry.lock`, `pdm.lock`, `Pipfile`, `tox.ini`, `noxfile.py`, `pyproject.toml`, `requirements*.txt`.
+2. Read local tool config: `pyproject.toml`, `pyrightconfig.json`, `mypy.ini`, `ruff.toml`, `pytest.ini`.
+3. Apply the coding checklist while editing.
+4. Verify with the project's native runner. Use `references/project-workflow.md` for command selection.
+5. If no configured tool exists, use the smallest truthful fallback: `python -m pytest`, `python -m compileall <package>`, or direct entry-point execution.
+
+Do not introduce a new Python manager, formatter, or package layout unless the task is explicitly about project setup.
 
 ---
 
@@ -592,11 +602,13 @@ Follow Phases 0–6 below when the user shares editor diagnostics or asks to fix
 Before any fix, determine the target Python version — it dictates annotation strategy:
 
 ```
-Check pyproject.toml → [project] requires-python
-      setup.cfg      → [options] python_requires
+Check pyproject.toml   → [project] requires-python
+      setup.cfg        → [options] python_requires
       .python-version
-      runtime (python3 --version)
+      runtime          → python3 --version
 ```
+
+Also detect the project runner and toolchain before verification. See `references/project-workflow.md` for `uv`, Poetry, PDM, Pipenv, tox, nox, and plain venv command selection.
 
 **Decision tree:**
 
@@ -675,15 +687,15 @@ x = some_call()  # type: ignore[assignment]  # noqa: F401
 ## Phase 5: Verify
 
 1. Run the project's existing entry point or test suite
-2. Re-run linter if available (`ruff check .`, `mypy .`, `pylint src/`)
+2. Re-run formatter/linter/type checker using the project's native runner
 3. If regressions found, fix and re-verify
 
 ```bash
-# Common runners
-python main.py             # or: uv run python main.py
-python -m pytest           # test suite
-ruff check . --fix         # auto-fixable lint
-mypy src/                  # type check
+# Examples; choose using references/project-workflow.md
+uv run pytest              # uv project
+poetry run pytest          # Poetry project
+python -m pytest           # plain venv / fallback
+python -m compileall src   # syntax fallback when tests do not exist
 ```
 
 ## Phase 6: Handle stale diagnostics
@@ -705,6 +717,7 @@ If a diagnostic references code already fixed (editor cache), inform the user an
 ## References
 
 - `references/fix-patterns.md` — Before/after examples for each fix category (P0–P6 detail)
+- `references/project-workflow.md` — Python project detection, command selection, verification ladder
 - `references/advanced-patterns.md` — TypeVar, Protocol, TypedDict, overload, Callable, numpy/matplotlib, TYPE_CHECKING patterns
 - `references/tool-codes.md` — Comprehensive diagnostic code mapping and tool configuration
 - `references/boundary-layer-exceptions.md` — Before/after examples for API, ORM, plugin, prototype boundary patterns
