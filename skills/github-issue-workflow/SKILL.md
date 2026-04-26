@@ -29,6 +29,20 @@ If a review agent or subagent is unavailable, use the local review checklist in 
 
 ## Workflow
 
+### 0. Preflight
+
+进入 issue triage 前先确认本地环境，避免后续分支或 worktree 基线出错：
+
+```bash
+gh auth status
+git remote -v
+git branch --show-current
+git status --short
+git fetch origin main --prune
+```
+
+如果当前仓库默认分支不是 `main`，后续所有 `--base main` 与 `origin/main` 都替换成实际默认分支。
+
 ### 1. Triage
 
 ```bash
@@ -64,6 +78,33 @@ For each issue：
 
 - Create TodoWrite，**一个 issue 一项**
 - **PM issue 拆分**：feature 类范围较大，先按 body 中的 `MVP 定义` 切成最小切片，每片在 TodoWrite 中作为子项；后续迭代部分作为 follow-up issue 记录而不是塞进当前 PR
+
+#### 2.0 Workspace 策略（先问用户）
+
+建分支前先询问用户是否使用 `git worktree` 隔离开发环境，尤其在以下情况推荐使用：
+
+- 当前工作区已有未提交改动
+- 要并行处理多个 unrelated issues
+- 改动风险较高，想保留 main workspace 不被打断
+
+推荐提问模板：
+
+> 要不要为这个 issue 开一个独立 `git worktree` 来开发？当前工作区会保持不动，分支仍会用 `gh issue develop` 关联到 issue。选项：`yes` / `no` / `auto`（多 issue 或工作区不干净时自动用）。
+
+用户选择后再进入分支创建：
+
+- `no`：在当前 workspace 中执行分支创建流程
+- `yes` / `auto` 且满足条件：先创建 detached worktree，再在 worktree 内执行分支创建流程
+- 多个 unrelated issues：优先每个 issue 一个 worktree，避免 worker 互相踩工作区
+
+```bash
+# worktree 路径按仓库名和 issue 号命名，避免混淆
+git worktree add --detach ../<repo>-issue-<N> origin/main
+cd ../<repo>-issue-<N>
+gh issue develop <N> --base main --name fix/issue-<N> --checkout
+```
+
+如果处于 degraded/local fallback 模式，worktree 仍可使用；进入 worktree 后按同样 branch 命名规范创建本地分支，并在 commit/PR 文本中保留 issue 引用。
 
 #### 2.1 创建分支并关联 issue（Full GitHub mode）
 
@@ -145,6 +186,13 @@ Degraded/local fallback: if push or `gh pr create` is unavailable, leave the bra
 
 PM 类 issue 关闭时，若仅完成 MVP，需在 close comment 中列出延后到 follow-up issue 的项目并附 issue 号。
 
+如果本次使用了 `git worktree`，PR 创建后提醒用户是否清理本地 worktree；PR 合并或不再需要后执行：
+
+```bash
+git worktree remove ../<repo>-issue-<N>
+git worktree prune
+```
+
 ## Commit Discipline
 
 | Rule | Why |
@@ -159,6 +207,7 @@ PM 类 issue 关闭时，若仅完成 MVP，需在 close comment 中列出延后
 
 - About to commit without review → run review agent or local review checklist first
 - About to parallelize issues that share files → switch to sequential
+- About to start issue work without asking workspace strategy → ask whether to use `git worktree`
 - About to skip tests "because only docs changed" → run them anyway
 - 用 `git checkout -b` 直接建分支，没走 `gh issue develop` → 分支不会出现在 issue Development 面板，补一次 `gh issue develop <N> --name <branch>` 关联
 - Rationalizing "review is overkill for small changes" → it's not
