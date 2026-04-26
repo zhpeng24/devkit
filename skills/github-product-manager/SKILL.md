@@ -100,18 +100,22 @@ If the user requests changes, adjust and re-present the preview. Loop until the 
 After user confirmation, execute the submission:
 
 1. Check if required labels exist; create any that don't
-2. Run `gh issue create` to submit the issue
+2. Run `gh issue create` to submit the issue. Always pass generated issue bodies via `--body-file`; do not embed multi-line Markdown in a quoted `--body "$(cat ...)"` argument.
 3. If there are multiple issues, create them one by one, cross-referencing each other at the end of the body
 4. Return all created issue URLs
 
 ```bash
+issue_body_file="$(mktemp)"
+trap 'rm -f "$issue_body_file"' EXIT
+
+cat >"$issue_body_file" <<'EOF'
+（issue 正文）
+EOF
+
 gh issue create \
   --title "[模块] 简述需求" \
   --label "label1,label2" \
-  --body "$(cat <<'EOF'
-（issue 正文）
-EOF
-)"
+  --body-file "$issue_body_file"
 ```
 
 ## Red Lines — Stop Immediately If:

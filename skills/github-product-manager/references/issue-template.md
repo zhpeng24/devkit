@@ -87,10 +87,10 @@ Examples:
 ## Submission Command
 
 ```bash
-gh issue create \
-  --title "[模块] 简述需求" \
-  --label "label1,label2" \
-  --body "$(cat <<'EOF'
+issue_body_file="$(mktemp)"
+trap 'rm -f "$issue_body_file"' EXIT
+
+cat >"$issue_body_file" <<'EOF'
 ## 用户故事
 ...
 
@@ -124,7 +124,11 @@ gh issue create \
 ## 优先级建议
 ...
 EOF
-)"
+
+gh issue create \
+  --title "[模块] 简述需求" \
+  --label "label1,label2" \
+  --body-file "$issue_body_file"
 ```
 
 ## Multi-Issue Splitting

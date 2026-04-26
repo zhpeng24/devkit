@@ -104,11 +104,16 @@ Use a parent tracking issue only when coordination matters. Child issues must st
 3. 填充模板各 section
 4. 生成命令：
 
+安全规则：
+- Issue 正文必须通过文件传给 `gh`，不要把多行正文放进 `--body "$(cat ...)"`。
+- `--title` 只能使用单行标题；如果标题来自用户输入，先去掉换行。
+- 需要后续评论或关闭 issue 时，只使用 `gh issue create` 返回的 URL 或 `gh issue view <url> --json number` 得到的数字编号作为目标。
+
 ```bash
-gh issue create \
-  --title "[模块] 简述" \
-  --label "label1,label2" \
-  --body "$(cat <<'EOF'
+issue_body_file="$(mktemp)"
+trap 'rm -f "$issue_body_file"' EXIT
+
+cat >"$issue_body_file" <<'EOF'
 ## 背景
 ...
 
@@ -130,7 +135,11 @@ gh issue create \
 ## 验收标准
 - [ ] ...
 EOF
-)"
+
+gh issue create \
+  --title "[模块] 简述" \
+  --label "label1,label2" \
+  --body-file "$issue_body_file"
 ```
 
 5. 确认 issue 创建成功后返回 URL

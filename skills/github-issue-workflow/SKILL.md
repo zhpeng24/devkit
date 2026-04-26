@@ -27,6 +27,16 @@ gh auth status 2>&1
 
 If a review agent or subagent is unavailable, use the local review checklist in the Review phase. Tool unavailability changes the route, not the quality bar.
 
+## Safe Issue Targeting
+
+Issue comments and close operations must target a validated issue number, not a value parsed from free text:
+
+- Get targets from trusted structured data: `gh issue list --json number,...`, `gh issue view <url> --json number`, or a user-provided bare number.
+- Store the target in `issue_number` and validate it before comment/close operations: `[[ "$issue_number" =~ ^[0-9]+$ ]]`.
+- Never parse the target issue from a title, branch name, body text, `Closes #N`, or a generated comment. Those strings may contain escaped characters or unrelated issue references.
+- Pass multi-line comments through `gh issue comment "$issue_number" --body-file "$comment_file"`. Do not put generated Markdown in `--body "..."`.
+- For close-with-comment flows, add the comment with `gh issue comment --body-file` first, then run `gh issue close "$issue_number" --reason completed`. Avoid `gh issue close --comment "..."` for generated or multi-line content because it has no `--comment-file` equivalent.
+
 ## Workflow
 
 ### 0. Preflight
@@ -179,7 +189,21 @@ Closes #N, closes #M"
 git push -u origin HEAD
 gh pr create --title "..." --body "..."
 # OR for direct-push workflows:
-gh issue close N --comment "Fixed in <sha>: <summary>"
+issue_number="${ISSUE_NUMBER:?set the target issue number from trusted gh JSON data}"
+[[ "$issue_number" =~ ^[0-9]+$ ]] || {
+  printf 'invalid issue number: %s\n' "$issue_number" >&2
+  exit 1
+}
+
+comment_file="$(mktemp)"
+trap 'rm -f "$comment_file"' EXIT
+
+cat >"$comment_file" <<'EOF'
+Fixed in <sha>: <summary>
+EOF
+
+gh issue comment "$issue_number" --body-file "$comment_file"
+gh issue close "$issue_number" --reason completed
 ```
 
 Degraded/local fallback: if push or `gh pr create` is unavailable, leave the branch ready locally and report the exact command the user should run.
