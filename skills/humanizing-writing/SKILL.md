@@ -22,7 +22,7 @@ Technical documentation -> prefer precise, neutral, current-state wording
 PR description -> state problem, actual change, verification, and known risk
 ```
 
-For Chinese everyday writing, apply the Chinese catalog before drafting: lead with the source's concrete person, place, time, or action, and retain every supported action. Remove a generic significance, promotional outcome, or future-looking claim only when it is both unsupported and merely restates or inflates adjacent concrete actions. Preserve a claim with independent support, named attribution, a citation, or a specific verifiable result; if its status is unclear, ask rather than delete it. Do not replace a removed claim with a softer inferred effect.
+For Chinese everyday writing, apply the Chinese catalog before drafting: lead with the source's concrete person, place, time, or action, and retain every supported action. When the user asks to preserve all facts, protect the concrete, source-backed facts—not generic significance or promotional framing that merely labels those facts. Remove a generic significance, promotional outcome, or future-looking claim when it has no independent support and merely restates or inflates adjacent concrete actions. Preserve a claim with independent support, named attribution, a citation, or a specific verifiable result; if its status is unclear, ask rather than delete it. Do not replace a removed claim with a softer inferred effect.
 
 For English everyday writing, apply the English catalog before drafting: lead with the source's concrete person, place, time, or action, and retain every supported action. Remove generic significance, promotional framing, speculative gap-filling, or an upbeat future claim when it is unsupported and merely inflates or restates adjacent concrete actions. Preserve a claim with independent support, named attribution, a citation, or a specific verifiable result; if its status is unclear, ask rather than delete it. Do not replace a removed claim with a softer inferred effect. Author samples and explicit preferences remain controlling.
 
@@ -59,7 +59,7 @@ Produce prose that states the concrete point early, keeps supported details, var
 
 ## Common Mistakes
 
-Avoid smoothing away a writer's intentional quirks, turning personal prose into a report, or turning technical material into marketing. Preserve uncertainty and missing evidence instead of filling gaps with plausible details.
+Avoid treating an instruction to preserve facts as a reason to retain unsupported generic significance, promotional results, or industry/future conclusions: retain the concrete actions and independently supported claims instead. Preserve the source's exact role and action relationships; for example, do not replace “opened by” with “founded by” merely because it sounds smoother. Avoid smoothing away a writer's intentional quirks, turning personal prose into a report, or turning technical material into marketing. Preserve uncertainty and missing evidence instead of filling gaps with plausible details.
 
 ## Final Check
 

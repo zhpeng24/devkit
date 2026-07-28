@@ -229,7 +229,7 @@ Run:
 
 ```bash
 python /Users/zhpeng/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/humanizing-writing
-rg -n 'TBD|TODO|PLACEHOLDER' skills/humanizing-writing
+rg -n '[T]BD|TO[D]O|[P]LACEHOLDER' skills/humanizing-writing
 ```
 
 Expected: validator reports success; `rg` returns no matches.
@@ -470,7 +470,7 @@ git commit -m "docs: expose humanizing writing skill"
 - Consumes: all Task 1 controls and the completed skill
 - Produces: convergent skill-enabled results, a comparison record, and a validated repository
 
-- [ ] **Step 1: Repeat the everyday-writing micro-test five times with the skill**
+- [x] **Step 1: Repeat the everyday-writing micro-test five times with the skill**
 
 Dispatch five fresh-context agents with:
 
@@ -488,7 +488,7 @@ Manually inspect all outputs. Success requires:
 - the outputs converge on concrete wording
 - sentence rhythm can vary without reintroducing promotional or significance language
 
-- [ ] **Step 2: Repeat all four application fixtures with the skill**
+- [x] **Step 2: Repeat all four application fixtures with the skill**
 
 Dispatch four fresh-context agents, one for each exact request below.
 
@@ -551,7 +551,7 @@ Use $humanizing-writing at skills/humanizing-writing to complete this request:
 
 Verify the scenario-specific expectations defined in Tasks 3 and 4.
 
-- [ ] **Step 3: Refactor only observed failures**
+- [x] **Step 3: Refactor only observed failures**
 
 Add or revise:
 
@@ -562,11 +562,11 @@ Add or revise:
 
 Re-run every fixture affected by a revision.
 
-- [ ] **Step 4: Append skill-enabled results**
+- [x] **Step 4: Append skill-enabled results**
 
 Extend `## Validation Results` with a `### Skill enabled` table. Add one row for each of the five named fixtures. Record the baseline problem, the observed skill-enabled result, and `PASS` or `FAIL`. Include the total control and skill-enabled sample counts.
 
-- [ ] **Step 5: Run all deterministic checks**
+- [x] **Step 5: Run all deterministic checks**
 
 Run:
 
@@ -574,7 +574,7 @@ Run:
 python /Users/zhpeng/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/humanizing-writing
 npm test
 git diff --check
-rg -n 'TBD|TODO|PLACEHOLDER' skills/humanizing-writing docs/superpowers/plans/2026-07-28-humanizing-writing.md
+rg -n '[T]BD|TO[D]O|[P]LACEHOLDER' skills/humanizing-writing docs/superpowers/plans/2026-07-28-humanizing-writing.md
 ```
 
 Expected:
@@ -584,14 +584,14 @@ Expected:
 - `git diff --check` returns no output
 - placeholder scan returns no matches
 
-- [ ] **Step 6: Commit evaluation-driven refinements**
+- [x] **Step 6: Commit evaluation-driven refinements**
 
 ```bash
 git add skills/humanizing-writing docs/superpowers/plans/2026-07-28-humanizing-writing.md
 git commit -m "test: verify humanizing writing behavior"
 ```
 
-- [ ] **Step 7: Review the final diff**
+- [x] **Step 7: Review the final diff**
 
 Run:
 
@@ -616,3 +616,15 @@ Sample count: 5 Chinese everyday micro-test runs and 4 application controls (9 t
 | PR description | The output correctly replaced the promotional bullets with the actual changes, but omitted the supplied qualification “没有基准测试数据.” | Omitted preservation requirement | In PR mode, include the actual problem, change, verification, and stated known limitation or risk; preserve negative verification facts such as the absence of benchmark data. |
 | English prose | The output removed some formulaic wording but retained the generic conclusion “Its future is bright” and changed “Opened by Mara Chen” to “Founded by Mara Chen.” | Incorrect conditional behavior; unsupported factual addition | In English everyday prose, remove generic future-looking conclusions and preserve the source’s exact role/action facts instead of substituting a stronger or different relationship. |
 | False-positive preservation | Passing control: the output retained the author’s em dash and parentheses and added no facts. | Passing control | No additional punctuation rule is needed; treat author-stated punctuation preferences as protected style rather than a formulaic pattern. |
+
+### Skill enabled (2026-07-28)
+
+Sample count: 9 baseline controls and 11 skill-enabled samples: five initial everyday runs, four initial application fixtures, and two fresh-context regressions after the observed refinements.
+
+| Fixture | Baseline problem | Observed skill-enabled result | Status |
+|---|---|---|---|
+| Chinese everyday micro-test | Generic significance, promotional results, and industry/future conclusions survived. | Four of five initial runs converged on the concrete handover and three listed actions without additions. One run retained the generic claims; a targeted core clarification that only concrete source-backed facts are protected produced a fresh regression result with the name, date, address, and all three actions, and no generic claims. | PASS |
+| Chinese technical documentation | The control changed output shape and added “提升响应速度.” | Preserved the frontmatter, heading, Redis, 300-second TTL, URL, and TypeScript block without an enclosing fence or added claims; removed generic warm-up and benefit framing. | PASS |
+| PR description | The control omitted the absence of benchmark data. | Stated the empty-key problem, direct miss, one merged Redis read, passing command, and no benchmark data. | PASS |
+| English prose | The control retained the future claim and changed “Opened by” to “Founded by.” | Initial result removed generic framing but changed the relationship to “founded.” A targeted core warning to preserve exact role/action relationships produced a fresh regression result that says Mara Chen opened the 18-room hotel in Millbrook in 2019, keeps locally sourced breakfasts and community connections, and removes the generic future claim. | PASS |
+| False-positive preservation | Passing control retained the author’s punctuation. | Returned the passage unchanged, retaining the em dash and parenthetical and adding no facts. | PASS |
