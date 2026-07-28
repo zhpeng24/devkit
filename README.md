@@ -6,8 +6,7 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 
 | Skill | Description |
 |-------|-------------|
-| **using-devkit** | Devkit entry-point: helps agents discover and invoke the available devkit skills |
-| **using-dev** | Default developer entry-point: routes repository work through SIES and scales evidence/artifacts from L0 to L3 |
+| **using-devkit** | Unified Devkit entry-point: discovers skills and routes repository work through SIES from L0 to L3 |
 | **sies-engineering** | Goal-first, evidence-driven engineering: Goal → Explore → Prototype → Evaluate → Refine → Engineer → Regress → Learn |
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting (`ruff`), Pylint fix patterns |
 | **humanizing-writing** | Chinese and English prose cleanup: preserves facts and voice while removing formulaic AI-writing patterns from everyday text, technical docs, and PR descriptions |
@@ -109,7 +108,7 @@ SIES (Self-Improving Engineering System) is the default development sequence:
 Goal → Explore → Prototype → Evaluate → Refine → Engineer → Regress → Learn
 ```
 
-`using-dev` routes repository changes into `sies-engineering`; L0–L3 controls
+`using-devkit` routes repository changes into `sies-engineering`; L0–L3 controls
 how deeply phases are expressed rather than selecting unrelated fixed
 workflows. Tests remain important evidence for goal alignment, stable
 contracts, and real risks. TDD is selected inside Engineering when a stable
@@ -222,8 +221,8 @@ signals may use user scenarios, metrics, visual results, contracts, or tests;
 
 ```
 skills/
-  using-dev/
-    SKILL.md                    # Default repository entry point
+  using-devkit/
+    SKILL.md                    # Unified discovery and repository entry
     references/
       level-decision.md         # L0-L3 depth scaling
       language-stack.md         # Language/tool detection

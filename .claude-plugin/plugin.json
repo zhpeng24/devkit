@@ -2,7 +2,7 @@
   "name": "devkit",
   "displayName": "Devkit",
   "description": "Cross-platform AI-agent skills with SIES engineering, writing, frontend design, image workflows, PowerPoint, GitHub, and tooling",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "zhpeng24"
   },

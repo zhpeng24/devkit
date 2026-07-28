@@ -279,14 +279,15 @@ L0/L1 可以在对话或本地计划中使用同样结构，不要求持久化�
 
 它不复制各 GitHub skill 的命令和安全规则。
 
-### `using-dev`
+### `using-devkit`
 
-从“按 L0–L3 选择不同流水线”改为：
+作为唯一入口，同时负责技能发现与研发路由：
 
 1. 检测仓库、语言、风险与不确定性；
 2. 默认调用 `sies-engineering`；
 3. 使用 L0–L3 决定阶段深度和持久化程度；
-4. 保留用户对 Issue、分支、计划和复盘的明确选择。
+4. 保留用户对 Issue、分支、计划和复盘的明确选择；
+5. 用按需 references 承载详细编排，避免再维护平行的 `using-dev`。
 
 ### `github-product-manager`
 
@@ -350,10 +351,10 @@ L0/L1 可以在对话或本地计划中使用同样结构，不要求持久化�
 本次实现将：
 
 1. 新增 `skills/sies-engineering/SKILL.md` 及必要参考文件；
-2. 重构 `skills/using-dev/SKILL.md` 和编排参考；
+2. 将研发编排合并到 `skills/using-devkit/`，删除平行的 `using-dev`；
 3. 重构三个 GitHub skills 及其相关模板；
 4. 更新 `AGENTS.md` 中的研发宪法；
-5. 更新 `README.md` 和 `skills/using-devkit/SKILL.md`；
+5. 更新 `README.md` 和统一入口的技能目录；
 6. 保持安装机制和现有 skill 发现方式不变。
 
 ## 验证策略
@@ -379,7 +380,7 @@ L0/L1 可以在对话或本地计划中使用同样结构，不要求持久化�
 ## 验收标准
 
 - `sies-engineering` 可被各支持平台发现并独立调用。
-- `using-dev` 默认把所有研发任务路由到 SIES。
+- `using-devkit` 是唯一入口，并把所有研发任务路由到 SIES。
 - L0–L3 只改变阶段深度，不改变核心研发序列。
 - 三个 GitHub skills 不再要求固定线性流程或固定模板。
 - Goal Contract、Evaluation Contract 和 Learning Candidate 有清晰结构。

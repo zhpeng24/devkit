@@ -38,13 +38,13 @@
 | Markdown | 无 | — | markdownlint 默认 |
 | 其他 | 无 | — | agent 通用规范 |
 
-## 未实现时的开场提示话术
+## 未实现时的开场说明
 
-当用户在一个尚无 `friendly-*` 的语言项目里触发 `using-dev`，开场确认要带一句告知：
+当用户在一个尚无 `friendly-*` 的语言项目里触发 `using-devkit`，开场说明要带一句告知：
 
 ```
 当前是 [Go] 项目，devkit 暂无 friendly-go skill，编码规范走 gofmt + golangci-lint
-默认 + Effective Go。其他流程（issue / plan / 复盘）按 L[N] 正常推进。
+默认 + Effective Go；SIES 研发序列继续推进。
 ```
 
 **不阻塞** —— 编码规范缺失不影响 `sies-engineering`、GitHub 状态恢复和证据评价。
@@ -63,7 +63,7 @@
    git status --short | awk '{print $2}' | grep -oE '\.[a-z]+$' | sort -u
    ```
 
-3. **开场确认话术：**
+3. **开场说明：**
    ```
    检测到本次改动涉及 Python 与 TypeScript，将同时应用 friendly-python
    与 ESLint 默认规则。
@@ -96,7 +96,7 @@
 2. **Step 2：** 更新本文件「完整语言适配表」对应行的 `状态` 为 ✅，删除「未实现时回退到」列说明
 3. **Step 3：** 更新主 SKILL.md「语言适配」表的同一行
 
-这 3 步可以在同一个 PR 完成，也可以拆成两个（先实现 skill，再更新 `using-dev` 引用）。
+这 3 步可以在同一个 PR 完成，也可以拆成两个（先实现 skill，再更新 `using-devkit` 引用）。
 
 ## 检测失败的兜底
 

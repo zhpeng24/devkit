@@ -1,4 +1,4 @@
-# Level Decision — SIES 深度判定
+# SIES Depth Decision
 
 ## Purpose
 

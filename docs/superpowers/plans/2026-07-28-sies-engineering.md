@@ -8,9 +8,10 @@
 GitHub skills from fixed workflows into adaptive goal-and-evidence tools.
 
 **Architecture:** Add one `sies-engineering` orchestrator with focused
-references for evidence strategy and GitHub state. Route `using-dev` through
-it, then reshape the three GitHub skills around Goal Contracts, Evaluation
-Contracts, resumable phase state, and risk-based verification.
+references for evidence strategy and GitHub state. Route repository work from
+the unified `using-devkit` into it, then reshape the three GitHub skills around
+Goal Contracts, Evaluation Contracts, resumable phase state, and risk-based
+verification.
 
 **Tech Stack:** Agent Skills Markdown, GitHub CLI guidance, Bash repository
 validation.
@@ -35,10 +36,10 @@ validation.
 | `skills/sies-engineering/SKILL.md` | Default SIES lifecycle and phase decisions |
 | `skills/sies-engineering/references/evidence-strategy.md` | Evaluation, testing, TDD selection, and test promotion |
 | `skills/sies-engineering/references/github-state.md` | GitHub Goal Contract, phase records, and recovery |
-| `skills/using-dev/SKILL.md` | Repository entry point and SIES routing |
-| `skills/using-dev/references/level-decision.md` | L0–L3 depth scaling |
-| `skills/using-dev/references/orchestration-cheatsheet.md` | Adaptive scenario routing |
-| `skills/using-dev/references/system-learning.md` | Evidence-based learning promotion |
+| `skills/using-devkit/SKILL.md` | Unified discovery, repository entry, and SIES routing |
+| `skills/using-devkit/references/level-decision.md` | L0–L3 depth scaling |
+| `skills/using-devkit/references/orchestration-cheatsheet.md` | Adaptive scenario routing |
+| `skills/using-devkit/references/system-learning.md` | Evidence-based learning promotion |
 | `skills/github-product-manager/SKILL.md` | Adaptive product Goal Contract discovery |
 | `skills/github-product-manager/references/question-framework.md` | Uncertainty-driven questions |
 | `skills/github-product-manager/references/issue-template.md` | Product Goal Contract profile |
@@ -50,7 +51,7 @@ validation.
 | `README.md` | Public discovery and conceptual overview |
 | `skills/using-devkit/SKILL.md` | In-agent skill discovery |
 
-`skills/using-dev/references/postmortem.md` is removed after its useful
+The legacy `skills/using-dev/references/postmortem.md` is removed after its useful
 learning rules are replaced by `system-learning.md`.
 
 ## Task 1: Add the SIES Core Skill
@@ -73,11 +74,9 @@ learning rules are replaced by `system-learning.md`.
 
 **Files:**
 
-- Modify `skills/using-dev/SKILL.md`
-- Modify `skills/using-dev/references/level-decision.md`
-- Modify `skills/using-dev/references/orchestration-cheatsheet.md`
-- Delete `skills/using-dev/references/postmortem.md`
-- Create `skills/using-dev/references/system-learning.md`
+- Modify `skills/using-devkit/SKILL.md`
+- Move development references into `skills/using-devkit/references/`
+- Delete the parallel `skills/using-dev/` entry
 - Modify `AGENTS.md`
 
 **Deliverable:**
@@ -137,7 +136,7 @@ learning rules are replaced by `system-learning.md`.
 **Deliverable:**
 
 - List `sies-engineering`.
-- Describe `using-dev` as the default SIES entry.
+- Describe `using-devkit` as the unified discovery and SIES entry.
 - Replace old fixed GitHub workflow descriptions with adaptive behavior.
 - Add a concise SIES overview and skill tree entries.
 
