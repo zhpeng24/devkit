@@ -229,10 +229,10 @@ Run:
 
 ```bash
 python /Users/zhpeng/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/humanizing-writing
-# Run the repository placeholder scan for this skill.
+scripts/check-humanizing-placeholders.sh
 ```
 
-Expected: validator reports success; `rg` returns no matches.
+Expected: validator reports success; the placeholder-check script exits 0 only when the scan finds no matches.
 
 - [ ] **Step 5: Commit the core workflow**
 
@@ -574,7 +574,7 @@ Run:
 python /Users/zhpeng/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/humanizing-writing
 npm test
 git diff --check
-# Run the repository placeholder scan across the skill and this plan.
+scripts/check-humanizing-placeholders.sh
 ```
 
 Expected:
@@ -582,7 +582,7 @@ Expected:
 - skill validator reports success
 - repository validation reports all checks passed
 - `git diff --check` returns no output
-- placeholder scan returns no matches
+- placeholder-check script exits 0 only when its scan returns no matches
 
 - [x] **Step 6: Commit evaluation-driven refinements**
 

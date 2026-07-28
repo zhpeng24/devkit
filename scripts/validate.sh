@@ -30,7 +30,7 @@ validate_json() {
 }
 
 validate_shell_syntax() {
-    bash -n scripts/install.sh scripts/validate.sh hooks/session-start
+    bash -n scripts/check-humanizing-placeholders.sh scripts/install.sh scripts/validate.sh hooks/session-start
 }
 
 validate_node_syntax() {
@@ -41,7 +41,7 @@ validate_executable_bits() {
     local path
     local missing=0
 
-    for path in scripts/install.sh scripts/validate.sh hooks/session-start hooks/run-hook.cmd; do
+    for path in scripts/check-humanizing-placeholders.sh scripts/install.sh scripts/validate.sh hooks/session-start hooks/run-hook.cmd; do
         if [[ ! -x "$path" ]]; then
             printf '%s is not executable\n' "$path" >&2
             missing=1
