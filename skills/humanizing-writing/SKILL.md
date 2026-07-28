@@ -22,6 +22,8 @@ Technical documentation -> prefer precise, neutral, current-state wording
 PR description -> state problem, actual change, verification, and known risk
 ```
 
+For Chinese everyday writing, apply the Chinese catalog before drafting: lead with the source's concrete person, place, time, or action; retain every supported action; and drop generic significance, promotional outcome, and future-looking claims that merely amplify those actions. Do not replace a dropped claim with a softer inferred effect.
+
 ## Preservation Contract
 
 Inventory and retain every source-backed fact, name, number, date, quotation, citation, URL, code block, frontmatter field, command, and identifier. Preserve the requested language, document structure, and deliberate author habits when they are supported by samples. Treat a cluster of patterns as evidence; judge an isolated word or punctuation mark in context. Never claim to determine whether a text was AI-authored.
@@ -59,7 +61,7 @@ Avoid smoothing away a writer's intentional quirks, turning personal prose into 
 
 ## Final Check
 
-Deliver the requested language and scope, with protected material unchanged and the chosen scenario's reader needs met. Return the output shape the user requested.
+Deliver the requested language and scope, with protected material unchanged and the chosen scenario's reader needs met. For Chinese everyday prose, make a final separate pass for a cluster of generic framing, promotional outcome claims, or generic industry/future conclusions; if the source supplies only concrete actions and no independent evidence for those claims, remove the whole claim rather than paraphrasing it. Return the output shape the user requested.
 
 ## References
 
