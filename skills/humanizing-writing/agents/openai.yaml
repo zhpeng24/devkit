@@ -1,0 +1,4 @@
+interface:
+  display_name: "Humanizing Writing"
+  short_description: "Make Chinese and English writing sound natural"
+  default_prompt: "Use $humanizing-writing to rewrite this text naturally without changing its facts or voice."
