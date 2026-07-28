@@ -24,6 +24,8 @@ PR description -> state problem, actual change, verification, and known risk
 
 For Chinese everyday writing, apply the Chinese catalog before drafting: lead with the source's concrete person, place, time, or action, and retain every supported action. Remove a generic significance, promotional outcome, or future-looking claim only when it is both unsupported and merely restates or inflates adjacent concrete actions. Preserve a claim with independent support, named attribution, a citation, or a specific verifiable result; if its status is unclear, ask rather than delete it. Do not replace a removed claim with a softer inferred effect.
 
+For English everyday writing, apply the English catalog before drafting: lead with the source's concrete person, place, time, or action, and retain every supported action. Remove generic significance, promotional framing, speculative gap-filling, or an upbeat future claim when it is unsupported and merely inflates or restates adjacent concrete actions. Preserve a claim with independent support, named attribution, a citation, or a specific verifiable result; if its status is unclear, ask rather than delete it. Do not replace a removed claim with a softer inferred effect. Author samples and explicit preferences remain controlling.
+
 ## Preservation Contract
 
 Inventory and retain every source-backed fact, name, number, date, quotation, citation, URL, code block, frontmatter field, command, and identifier. Preserve the requested language, document structure, and deliberate author habits when they are supported by samples. Treat a cluster of patterns as evidence; judge an isolated word or punctuation mark in context. Never claim to determine whether a text was AI-authored.
@@ -62,6 +64,8 @@ Avoid smoothing away a writer's intentional quirks, turning personal prose into 
 ## Final Check
 
 Deliver the requested language and scope, with protected material unchanged and the chosen scenario's reader needs met. For Chinese everyday prose, make a final separate pass for a cluster of generic framing, promotional outcome claims, or generic industry/future conclusions; if the source supplies only concrete actions and no independent evidence for those claims, remove the whole claim rather than paraphrasing it. Return the output shape the user requested.
+
+For English everyday prose, make the same final separate pass for generic significance, promotional framing, speculative gap-filling, and generic industry/future conclusions; if the source supplies only concrete actions and no independent evidence for those claims, remove the whole claim rather than paraphrasing it. Return the output shape the user requested.
 
 ## References
 
