@@ -46,7 +46,7 @@
 - Consumes: the five fixtures below without exposing the proposed skill or desired fixes
 - Produces: exact observed baseline failures that the minimal skill must address
 
-- [ ] **Step 1: Run the Chinese everyday-writing micro-test five times without guidance**
+- [x] **Step 1: Run the Chinese everyday-writing micro-test five times without guidance**
 
 Dispatch five fresh-context agents with this exact request:
 
@@ -63,7 +63,7 @@ Read all five outputs. Record whether they converge on a concrete rewrite and wh
 - avoid inventing attendance, revenue, community reaction, or motives
 - preserve a readable personal cadence instead of flattening the text into a report
 
-- [ ] **Step 2: Run four application controls without guidance**
+- [x] **Step 2: Run four application controls without guidance**
 
 Dispatch one fresh-context agent per fixture.
 
@@ -122,11 +122,11 @@ False-positive preservation:
 
 Record the exact failures that recur. Classify each as wrong output shape, omitted preservation requirement, incorrect conditional behavior, or unsupported factual addition.
 
-- [ ] **Step 3: Add the observed baseline results to this plan**
+- [x] **Step 3: Add the observed baseline results to this plan**
 
 Append a dated `## Validation Results` section with a `### Baseline` table. Add one row each for `Chinese everyday micro-test`, `Chinese technical documentation`, `PR description`, `English prose`, and `False-positive preservation`. Record the actual repeated failure, its failure class, and the specific skill requirement derived from it. Use only observed failures. If a control already behaves correctly, mark that row as a passing control and do not add unnecessary guidance for that behavior.
 
-- [ ] **Step 4: Commit the baseline record**
+- [x] **Step 4: Commit the baseline record**
 
 ```bash
 git add docs/superpowers/plans/2026-07-28-humanizing-writing.md
@@ -602,3 +602,17 @@ git show --stat --oneline HEAD
 ```
 
 Expected: worktree is clean, commits are scoped, and the final commit contains only evaluation-driven skill or validation-record changes.
+
+## Validation Results
+
+### Baseline (2026-07-28)
+
+Sample count: 5 Chinese everyday micro-test runs and 4 application controls (9 total), all run by fresh-context agents without skill guidance.
+
+| Fixture | Actual repeated failure or passing control | Failure class | Specific skill requirement derived from the observation |
+|---|---|---|---|
+| Chinese everyday micro-test | All five outputs kept the generic conclusion that the transition injected new vitality and offered the industry valuable lessons. All five also retained a form of “不只是/不仅是……更是……”, “重要文化纽带”, or “坚定承诺”; the samples converged on near-paraphrases, not a concrete rewrite. | Incorrect conditional behavior | For everyday prose, remove clustered empty-significance framing, “不仅……更……”, promotional verbs, and generic conclusions while retaining the named facts and a personal cadence. |
+| Chinese technical documentation | The output preserved frontmatter, URL, code, and the 300-second TTL, but wrapped the whole document in a Markdown code fence and added the unsupported specific claim “提升响应速度.” | Wrong output shape; unsupported factual addition | In technical-documentation mode, return the document itself without an enclosing fence; protect frontmatter, URLs, code, and technical facts, and do not turn a general benefit into a new measurable or specific claim. |
+| PR description | The output correctly replaced the promotional bullets with the actual changes, but omitted the supplied qualification “没有基准测试数据.” | Omitted preservation requirement | In PR mode, include the actual problem, change, verification, and stated known limitation or risk; preserve negative verification facts such as the absence of benchmark data. |
+| English prose | The output removed some formulaic wording but retained the generic conclusion “Its future is bright” and changed “Opened by Mara Chen” to “Founded by Mara Chen.” | Incorrect conditional behavior; unsupported factual addition | In English everyday prose, remove generic future-looking conclusions and preserve the source’s exact role/action facts instead of substituting a stronger or different relationship. |
+| False-positive preservation | Passing control: the output retained the author’s em dash and parentheses and added no facts. | Passing control | No additional punctuation rule is needed; treat author-stated punctuation preferences as protected style rather than a formulaic pattern. |
