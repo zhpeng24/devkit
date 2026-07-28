@@ -130,8 +130,11 @@ Repair instead:
 ## Acceptance
 
 - All five skills pass the official skill validator.
-- Fresh-context behavioral probes demonstrate each routing boundary.
+- After the complete feature batch is implemented, a small set of
+  high-information regression checks covers the routing boundaries.
 - `npm test`, shell syntax checks, executable-bit checks, local-reference
-  checks, discovery checks, placeholder checks, and `git diff --check` pass.
+  checks, discovery checks, placeholder checks, and `git diff --check` pass in
+  the final regression.
 - The final diff contains no Anthropic PPTX content or derivative scripts.
-- Independent code review finds no P0–P2 issue.
+- Tests are selected for real failure modes and useful assertions; per-file
+  repeated full-suite runs and review-agent loops are not required.

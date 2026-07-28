@@ -1,6 +1,6 @@
 {
   "name": "devkit",
-  "description": "Developer toolkit: Python code standards, type safety, and automated cleanup skills",
+  "description": "Cross-platform AI-agent skills for development, writing, frontend design, image workflows, PowerPoint, GitHub, and tooling",
   "version": "1.0.0",
   "contextFileName": "GEMINI.md"
 }

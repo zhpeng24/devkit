@@ -10,6 +10,11 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 | **using-dev** | Developer entry-point: detects task level (L0-L3) and orchestrates `friendly-*`, `github-*`, and superpowers skills end-to-end |
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting (`ruff`), Pylint fix patterns |
 | **humanizing-writing** | Chinese and English prose cleanup: preserves facts and voice while removing formulaic AI-writing patterns from everyday text, technical docs, and PR descriptions |
+| **taste-skill** | Context-aware web design and redesign guidance that respects the existing stack, brand system, accessibility, and real content |
+| **image-to-code-skill** | Faithful web implementation from screenshots, Figma frames, and approved visual references with viewport-based comparison |
+| **imagegen-frontend-web** | Image-only website concepts and section references with coherent art direction and implementation-readable detail |
+| **imagegen-frontend-mobile** | Image-only native mobile screens and flows for iOS, Android, and cross-platform products |
+| **pptx** | Safe PowerPoint `.pptx`/`.potx` creation, inspection, editing, structural validation, and rendered visual QA |
 | **mihomo-proxy-setup** | User-space Mihomo proxy installer: Clash subscription, Web UI, dev tool wrappers (Cursor/Copilot/Claude), Linux + macOS |
 | **github-create-issue** | Structured GitHub issue creation with `gh` CLI — enforces background, impact, acceptance criteria sections and consistent labeling |
 | **github-issue-workflow** | End-to-end GitHub issue development workflow — triage, develop, code review, ship |
@@ -116,6 +121,39 @@ A prose cleanup skill for Chinese and English writing that:
 - **Calibrates to author samples** — matches the writer's existing voice when examples are provided
 - **Protects against false positives** — avoids changing clear, intentional, or already-natural phrasing
 
+### taste-skill
+
+Web design guidance that reads the product, audience, brand assets, existing
+stack, and constraints before choosing a visual direction. It covers redesign
+audits, responsive behavior, accessibility, real UI states, asset rights, and
+rendered verification without forcing React/Next or a stock “AI” aesthetic.
+
+### image-to-code-skill
+
+An implementation workflow for screenshots, Figma frames, and approved visual
+references. It inventories layout and visual tokens before coding, keeps the
+existing project stack, and verifies fidelity at the source viewport plus
+responsive variants.
+
+### imagegen-frontend-web
+
+Creates image-only website references. Image count follows the requested
+sections, frames share one visual system, and each output stays readable enough
+for downstream implementation.
+
+### imagegen-frontend-mobile
+
+Creates image-only native mobile screens and flows with platform-aware safe
+areas, navigation, touch geometry, readable type, and consistent product
+states. Frame-free implementation references are supported.
+
+### pptx
+
+A clean-room PowerPoint workflow for reading, creating, and safely editing
+`.pptx`/`.potx` files. It preserves the source, preflights available libraries
+and renderers, checks package/content integrity, and distinguishes completed
+visual QA from unverified rendering.
+
 ### mihomo-proxy-setup
 
 A complete user-space proxy installer and manager:
@@ -158,6 +196,21 @@ skills/
       fix-patterns.md           # Before/after fix examples
       tool-codes.md             # Pyright/Pylint code reference
       advanced-patterns.md      # Complex type patterns
+  humanizing-writing/
+    SKILL.md                    # Chinese/English writing workflow
+    references/
+      chinese-patterns.md
+      english-patterns.md
+  taste-skill/
+    SKILL.md                    # Context-aware web design
+  image-to-code-skill/
+    SKILL.md                    # Visual reference to frontend
+  imagegen-frontend-web/
+    SKILL.md                    # Image-only web references
+  imagegen-frontend-mobile/
+    SKILL.md                    # Image-only mobile flows
+  pptx/
+    SKILL.md                    # PowerPoint artifact workflow
   mihomo-proxy-setup/
     SKILL.md                    # Installation/uninstall flow
     references/
@@ -217,4 +270,5 @@ gemini extensions update devkit
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) file.
+MIT License — see [LICENSE](LICENSE). Adapted components retain their original
+licenses and attribution in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

@@ -23,6 +23,8 @@ Existing design tokens, components, logos, imagery, and brand rules are authorit
 
 Write a short direction before implementation: hierarchy, palette use, type scale, spacing rhythm, shape/radius, image treatment, density, and motion policy. Make those choices fit the audience and content; avoid generic centered-gradient heroes, uniform card grids, nested containers, decorative pills, and repeated boxed sections when they do not serve the page.
 
+When the brief has no brand reference, derive the direction from the product, audience, content, and desired action. A familiar framework or a short deadline is not permission to migrate the existing stack or fall back to a generic “premium AI” recipe.
+
 Use purposeful variation in composition while keeping a coherent system. Prefer real content and assets; label unknown content as a placeholder rather than presenting it as fact.
 
 ## Build and verify

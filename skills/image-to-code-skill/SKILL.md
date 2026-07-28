@@ -7,6 +7,8 @@ description: Use when faithfully implementing a web interface from a supplied sc
 
 Treat the reference as a specification. A supplied screenshot, Figma frame, or approved image is authoritative; do not regenerate, restyle, or replace it merely because image generation is available.
 
+If a request calls a reference approved or final but also asks to “capture the vibe,” modernize it, or skip comparison, surface the conflict. Keep the approved source authoritative unless the user explicitly changes that status; do not silently downgrade fidelity to meet a deadline.
+
 ## Choose the source
 
 | Reference state | Action |

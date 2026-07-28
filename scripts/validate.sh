@@ -89,6 +89,47 @@ validate_skill_frontmatter() {
     return "$invalid"
 }
 
+validate_skill_local_references() {
+    local skill_file
+    local skill_dir
+    local reference
+    local target
+    local missing=0
+
+    while IFS= read -r -d '' skill_file; do
+        skill_dir="$(dirname "$skill_file")"
+
+        while IFS= read -r reference; do
+            [[ -z "$reference" ]] && continue
+
+            case "$reference" in
+                http://*|https://*|mailto:*|\#*)
+                    continue
+                    ;;
+            esac
+
+            reference="${reference%%#*}"
+            reference="${reference#<}"
+            reference="${reference%>}"
+            target="$skill_dir/$reference"
+
+            if [[ ! -e "$target" ]]; then
+                printf '%s references missing local path: %s\n' "$skill_file" "$reference" >&2
+                missing=1
+            fi
+        done < <(
+            {
+                rg -o --no-filename '`(references|scripts|assets)/[^`]+`' "$skill_file" |
+                    tr -d '`' || true
+                rg -o --no-filename '\]\([^)]*\)' "$skill_file" |
+                    sed -e 's/^](//' -e 's/)$//' || true
+            } | sort -u
+        )
+    done < <(find skills -mindepth 2 -maxdepth 2 -name SKILL.md -print0)
+
+    return "$missing"
+}
+
 validate_readme_skills() {
     local skill_file
     local skill_name
@@ -98,6 +139,24 @@ validate_readme_skills() {
         skill_name="$(basename "$(dirname "$skill_file")")"
         if ! rg -q "\\*\\*${skill_name}\\*\\*" README.md; then
             printf 'README.md does not list skill: %s\n' "$skill_name" >&2
+            missing=1
+        fi
+    done < <(find skills -mindepth 2 -maxdepth 2 -name SKILL.md -print0)
+
+    return "$missing"
+}
+
+validate_using_devkit_skills() {
+    local skill_file
+    local skill_name
+    local missing=0
+
+    while IFS= read -r -d '' skill_file; do
+        skill_name="$(basename "$(dirname "$skill_file")")"
+        [[ "$skill_name" == "using-devkit" ]] && continue
+
+        if ! rg -q "\\*\\*${skill_name}\\*\\*" skills/using-devkit/SKILL.md; then
+            printf 'skills/using-devkit/SKILL.md does not list skill: %s\n' "$skill_name" >&2
             missing=1
         fi
     done < <(find skills -mindepth 2 -maxdepth 2 -name SKILL.md -print0)
@@ -148,7 +207,10 @@ check "Shell syntax" validate_shell_syntax
 check "OpenCode plugin syntax" validate_node_syntax
 check "executable file bits" validate_executable_bits
 check "skill frontmatter" validate_skill_frontmatter
+check "skill local references" validate_skill_local_references
 check "README skill list" validate_readme_skills
+check "using-devkit skill list" validate_using_devkit_skills
+check "humanizing placeholder scan" scripts/check-humanizing-placeholders.sh
 check "install docs match non-interactive script behavior" validate_install_docs
 check "version bump targets exist" validate_version_bump_targets
 check "package scripts" validate_package_scripts
