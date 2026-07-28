@@ -9,6 +9,7 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 | **using-devkit** | Devkit entry-point: helps agents discover and invoke the available devkit skills |
 | **using-dev** | Developer entry-point: detects task level (L0-L3) and orchestrates `friendly-*`, `github-*`, and superpowers skills end-to-end |
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting (`ruff`), Pylint fix patterns |
+| **humanizing-writing** | Chinese and English prose cleanup: preserves facts and voice while removing formulaic AI-writing patterns from everyday text, technical docs, and PR descriptions |
 | **mihomo-proxy-setup** | User-space Mihomo proxy installer: Clash subscription, Web UI, dev tool wrappers (Cursor/Copilot/Claude), Linux + macOS |
 | **github-create-issue** | Structured GitHub issue creation with `gh` CLI — enforces background, impact, acceptance criteria sections and consistent labeling |
 | **github-issue-workflow** | End-to-end GitHub issue development workflow — triage, develop, code review, ship |
@@ -105,6 +106,15 @@ A comprehensive Python code cleanup skill that enforces:
 - **Clean imports** — no empty `__init__.py`, no `TYPE_CHECKING`, no re-exports
 - **Pylint fix patterns** — unused arguments, broad exceptions, import ordering
 - **TypedDict / Protocol / Literal** over loose `dict` / `Any`
+
+### humanizing-writing
+
+A prose cleanup skill for Chinese and English writing that:
+
+- **Routes by context** — adapts everyday writing, technical documentation, and PR descriptions
+- **Preserves facts and protected spans** — keeps names, numbers, commands, code, and links intact
+- **Calibrates to author samples** — matches the writer's existing voice when examples are provided
+- **Protects against false positives** — avoids changing clear, intentional, or already-natural phrasing
 
 ### mihomo-proxy-setup
 
