@@ -23,7 +23,7 @@ Treat these as context-sensitive pattern clusters, not a blacklist. First protec
 - **Vague attribution:** Replace “experts say,” “observers note,” and “industry reports” with an actual named, supplied source, or remove the unsupported attribution. Never invent a source.
 - **Template challenges/future section:** Do not add “Challenges and future prospects,” a generic obstacle inventory, or optimism that merely fills an outline. Keep actual risks, plans, and dates.
 
-**Example:** `Opened by Mara Chen in 2019, the hotel offers locally sourced breakfasts.` is stronger than a sentence that makes it a vibrant testament to Millbrook's hospitality landscape and says it fosters community.
+**Example:** `Opened by Mara Chen in 2019, the hotel offers locally sourced breakfasts and fosters connections in the community.` is stronger than a sentence that makes those facts a vibrant testament to Millbrook's hospitality landscape or a profound commitment to community.
 
 ## 2. Language and grammar patterns
 
@@ -60,7 +60,7 @@ Treat these as context-sensitive pattern clusters, not a blacklist. First protec
 - **Persuasive authority and vague declaratives:** “At its core,” “what really matters,” “the stakes are high,” and “the reasons are structural” can announce depth without providing it. Name the specific reason or consequence when supplied.
 - **Generic positive conclusions:** Do not end with “the future looks bright,” “exciting times lie ahead,” or a generic “step in the right direction.” End on the last supported fact unless the source states a concrete next step.
 
-**Example:** `The company will publish the audit in September.` is a credible ending; `Its future looks bright.` is not evidence.
+**Example:** Given `The company will publish the audit in September. Its future looks bright.`, end with `The company will publish the audit in September.` rather than the unsupported send-off.
 
 ## 6. Binary contrasts, negative staging, and rhetorical setups
 
