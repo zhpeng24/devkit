@@ -1,8 +1,8 @@
 {
   "name": "devkit",
   "displayName": "Devkit",
-  "description": "Cross-platform AI-agent skills for development, writing, frontend design, image workflows, PowerPoint, GitHub, and tooling",
-  "version": "1.0.0",
+  "description": "Cross-platform AI-agent skills with SIES engineering, writing, frontend design, image workflows, PowerPoint, GitHub, and tooling",
+  "version": "1.1.0",
   "author": {
     "name": "zhpeng24"
   },
@@ -20,6 +20,8 @@
     "design",
     "writing",
     "powerpoint",
+    "sies",
+    "agentic-engineering",
     "best-practices"
   ],
   "skills": "./skills/",
