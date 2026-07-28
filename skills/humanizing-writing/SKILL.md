@@ -26,7 +26,7 @@ For Chinese everyday writing, apply the Chinese catalog before drafting: lead wi
 
 ## Preservation Contract
 
-Inventory and retain every source-backed fact, name, number, date, quotation, citation, URL, code block, frontmatter field, command, and identifier. Preserve the requested language, document structure, and deliberate author habits when they are supported by samples. Treat a cluster of patterns as evidence; judge an isolated word or punctuation mark in context. Never claim to determine whether a text was AI-authored.
+Inventory and retain every source-backed fact, name, number, date, quotation, citation, URL, code block, frontmatter field, command, and identifier. Do not treat an evaluative assertion as a protected fact merely because it appears in the source: preserve it only when the text also supplies independent support, a named attribution, a citation, or a specific verifiable result. Otherwise retain the concrete action or evidence beneath it and remove the unsupported evaluation. Preserve the requested language, document structure, and deliberate author habits when they are supported by samples. Treat a cluster of patterns as evidence; judge an isolated word or punctuation mark in context. Never claim to determine whether a text was AI-authored.
 
 ## Calibrate the Voice
 
