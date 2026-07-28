@@ -19,7 +19,7 @@ English input -> read references/english-patterns.md
 Mixed input -> read both only when both prose portions require editing
 Everyday writing -> preserve personality and uneven rhythm
 Technical documentation -> prefer precise, neutral, current-state wording
-PR description -> state problem, actual change, verification, and known risk
+PR description -> state problem, actual change, verification, and each stated limitation at its exact scope
 ```
 
 For Chinese everyday writing, apply the Chinese catalog before drafting: lead with the source's concrete person, place, time, or action, and retain every supported action. When the user asks to preserve all facts, protect the concrete, source-backed facts—not generic significance or promotional framing that merely labels those facts. Remove a generic significance, promotional outcome, or future-looking claim when it has no independent support and merely restates or inflates adjacent concrete actions. Preserve a claim with independent support, named attribution, a citation, or a specific verifiable result; if its status is unclear, ask rather than delete it. Do not replace a removed claim with a softer inferred effect.

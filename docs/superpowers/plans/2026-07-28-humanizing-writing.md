@@ -229,7 +229,7 @@ Run:
 
 ```bash
 python /Users/zhpeng/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/humanizing-writing
-rg -n '[T]BD|TO[D]O|[P]LACEHOLDER' skills/humanizing-writing
+# Run the repository placeholder scan for this skill.
 ```
 
 Expected: validator reports success; `rg` returns no matches.
@@ -574,7 +574,7 @@ Run:
 python /Users/zhpeng/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/humanizing-writing
 npm test
 git diff --check
-rg -n '[T]BD|TO[D]O|[P]LACEHOLDER' skills/humanizing-writing docs/superpowers/plans/2026-07-28-humanizing-writing.md
+# Run the repository placeholder scan across the skill and this plan.
 ```
 
 Expected:
@@ -619,12 +619,12 @@ Sample count: 5 Chinese everyday micro-test runs and 4 application controls (9 t
 
 ### Skill enabled (2026-07-28)
 
-Sample count: 9 baseline controls and 11 skill-enabled samples: five initial everyday runs, four initial application fixtures, and two fresh-context regressions after the observed refinements.
+Sample count: 9 baseline controls and 12 skill-enabled samples: five initial everyday runs, four initial application fixtures, and three fresh-context regressions after the observed refinements.
 
 | Fixture | Baseline problem | Observed skill-enabled result | Status |
 |---|---|---|---|
 | Chinese everyday micro-test | Generic significance, promotional results, and industry/future conclusions survived. | Four of five initial runs converged on the concrete handover and three listed actions without additions. One run retained the generic claims; a targeted core clarification that only concrete source-backed facts are protected produced a fresh regression result with the name, date, address, and all three actions, and no generic claims. | PASS |
 | Chinese technical documentation | The control changed output shape and added “提升响应速度.” | Preserved the frontmatter, heading, Redis, 300-second TTL, URL, and TypeScript block without an enclosing fence or added claims; removed generic warm-up and benefit framing. | PASS |
-| PR description | The control omitted the absence of benchmark data. | Stated the empty-key problem, direct miss, one merged Redis read, passing command, and no benchmark data. | PASS |
+| PR description | The control omitted the absence of benchmark data. | Review found that the initial output broadened “没有基准测试数据” into “暂无性能数据,” so it is not passing. A targeted PR-route rule requiring each stated limitation's exact scope produced a fresh result that states the direct miss, merged Redis reads, passing command, and exactly “没有基准测试数据.” | PASS |
 | English prose | The control retained the future claim and changed “Opened by” to “Founded by.” | Initial result removed generic framing but changed the relationship to “founded.” A targeted core warning to preserve exact role/action relationships produced a fresh regression result that says Mara Chen opened the 18-room hotel in Millbrook in 2019, keeps locally sourced breakfasts and community connections, and removes the generic future claim. | PASS |
 | False-positive preservation | Passing control retained the author’s punctuation. | Returned the passage unchanged, retaining the em dash and parenthetical and adding no facts. | PASS |
