@@ -52,7 +52,7 @@ PM 类 issue 来自 `github-product-manager`（template 与工程类不同），
 3. **切片实现**：
    - MVP 内的能力 → 当前 L2 流程一次做完
    - 超出 MVP 的能力 → **必须**开 follow-up issue 而不是塞进当前 PR
-4. 若 issue 标 `needs-design` → 升 L3，先走 `architecture-designer`
+4. 若 issue 标 `needs-design` → 升 L3，先用 `brainstorming` 比较方案并记录 ADR；外部 skill 不可用时走同等本地流程
 
 ## 降级请求处理
 
@@ -62,7 +62,7 @@ PM 类 issue 来自 `github-product-manager`（template 与工程类不同），
 |--------|------|--------|
 | "别建 issue 直接改" | `github-create-issue` / `github-issue-workflow` | `friendly-*` + 本地 commit 规范 |
 | "不需要 plan，直接写" | `writing-plans` | `friendly-*` + issue 流程（如已建）+ 复盘 |
-| "不复盘" | `self-improving` | — |
+| "不复盘" | 本地 postmortem | — |
 | "直接改" / "快点" | 所有 superpowers + issue 流程 | `friendly-*` 规范（永远保留） |
 | "降到 L[N-1]" | 按对应等级的链路 | — |
 
@@ -87,4 +87,4 @@ PM 类 issue 来自 `github-product-manager`（template 与工程类不同），
 - [ ] 是否检测了 GitHub remote？
 - [ ] 是否给出明确的等级 L[N]？
 - [ ] 是否给用户至少一个降级 / 升级 / 跳过 issue 的 opt-out 选项？
-- [ ] 用户没明确同意之前，是否克制住了"直接动手"的冲动？
+- [ ] 用户尚未授权直接执行时，是否先确认了会显著改变范围的流程选择？

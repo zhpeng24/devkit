@@ -9,15 +9,25 @@
 | 需求模糊、不知道做啥 | `brainstorming` | L2/L3 进入开发前 |
 | 任务清楚但步骤多 | `writing-plans` | L2/L3 在 brainstorming 之后、动手之前 |
 | 已有 plan 要按部就班执行 | `executing-plans` | 任意等级，有 plan 就用 |
-| 架构级决策 | `architecture-designer` | L3 必用 |
+| 架构级决策 | `brainstorming` + 本地 ADR 流程 | L3；外部 skill 不可用时也能执行 |
 | 改 Python 代码 | `friendly-python` | 任意等级，遇到 `.py` 就贯穿 |
 | 改 TypeScript / Go / Rust | `friendly-<lang>`（未实现回退默认工具） | 任意等级 |
 | 要建 issue | `github-create-issue` | L1 询问后 / L2/L3 必用 |
 | 端到端推进 issue | `github-issue-workflow` | L1+ 用，等级越高越严格 |
-| 完成后复盘 | `self-improving` | L2 询问 / L3 默认 |
-| 调试疑难问题 | `debug-pro` | 任意等级，bug 不明时按需调用 |
+| 完成后复盘 | `references/postmortem.md` | L2 询问 / L3 默认 |
+| 调试疑难问题 | `systematic-debugging`（不可用时走本地原因优先流程） | 任意等级，bug 不明时按需调用 |
+| 交付验证 | `verification-before-completion`（不可用时跑项目检查） | 完整逻辑增量或需求完成后 |
 | git 工作树管理 / 多分支并行 | `git-essentials` / 工作树相关 | L2/L3 多任务并行时 |
-| 代码评审 | `code-reviewer` subagent | 所有等级 commit 前必跑（L0 可跳过） |
+| 代码评审 | review agent 或本地 checklist | 完整功能/修复批次结束后；L0 可跳过 |
+
+## 测试原则速查
+
+- 先识别关键风险和失败模式，再决定测什么；不以测试数量、覆盖率数字或重复次数代替判断。
+- 开发中只跑能指导下一步的快速检查；完整功能或逻辑批次结束后跑目标测试，需求交付前统一跑回归。
+- 优先保留断言明确、缺陷出现时真的会失败、能覆盖边界/错误路径且结果稳定的高信息量测试。
+- 代码、配置、依赖和环境没有相关变化时，不重复跑同一套测试。
+- 文档、skill、元数据等同类改动批量完成后统一校验，不为每个文件单独启动全量回归和评审。
+- 安全、迁移、并发、公共接口兼容性和 bug 复现可提前做针对性测试，但仍以风险为依据。
 
 ## 典型剧本
 
@@ -43,7 +53,7 @@
 4. （3a/3b 走）gh issue develop <N> --base main --name fix/issue-<N> --checkout
 5. 读受影响代码
 6. 改 → friendly-* 贯穿
-7. 跑测试（pytest -v --tb=short 或对应语言的等价命令）
+7. 完成修复批次后跑目标测试（pytest -v --tb=short 或对应语言的等价命令）
 8. 调 code-reviewer subagent
 9. commit + push
 10. gh pr create（或 gh issue close 走直推流）
@@ -61,7 +71,7 @@
 6. gh issue develop <N> --base main --name feat/issue-<N> --checkout
 7. → executing-plans 按 plan 推进
 8. 编码全程贯穿 friendly-*
-9. 跑测试
+9. 完成功能批次后跑目标测试；交付前跑一次回归
 10. → code-reviewer subagent
 11. commit + push
 12. gh pr create
@@ -75,7 +85,7 @@
 ```
 1. 检测语言 + Repo
 2. 一句话告诉用户："识别为 L3，需要架构级决策与 ADR"
-3. → architecture-designer 输出方案
+3. → brainstorming 比较架构方案（不可用时在本地记录备选与取舍）
 4. 写 ADR 到 docs/adr/YYYYMMDD-<topic>.md
 5. → brainstorming（如有未澄清点）
 6. → writing-plans 拆 task
@@ -87,7 +97,7 @@
 12. → code-reviewer subagent
 13. commit + push（每个逻辑组一个 commit）
 14. gh pr create（在 PR body 引用 ADR）
-15. 默认调 self-improving 走完整复盘
+15. 按 references/postmortem.md 走完整复盘
 16. 写 docs/learnings/YYYY-MM-DD-<topic>.md
 17. 结束
 ```
@@ -98,7 +108,7 @@
 |--------|------|--------|
 | "别建 issue 直接改" | `github-create-issue` / `github-issue-workflow` | `friendly-*` + 本地 commit + 复盘（如适用） |
 | "不需要 plan，直接写" | `writing-plans` / `executing-plans` | `friendly-*` + issue 流程（如已建）+ 复盘 |
-| "不复盘" | `self-improving` | — |
+| "不复盘" | 本地 postmortem | — |
 | "直接改" / "快点" | 所有 superpowers + issue 流程 | `friendly-*`（永远保留）|
 | "不需要 ADR" (L3) | ADR 写作 | 提示一次"L3 不写 ADR 风险大"后尊重用户 |
 
@@ -116,8 +126,8 @@
 | `brainstorming` | 直接调，让 brainstorming 输出设计文档；using-dev 不替代它做需求澄清 |
 | `writing-plans` | 直接调，使用其 plan 模板；using-dev 不重写计划格式 |
 | `executing-plans` | 直接调，按其检查点机制推进；using-dev 不替代任务执行 |
-| `self-improving` | L3 默认调；L2 询问后调；using-dev 不写复盘内容，只触发 |
-| `architecture-designer` | L3 调；输出物（架构方案 + ADR）由其负责，using-dev 只承接 |
+| `systematic-debugging` | 疑难 bug 时优先调；不可用则执行本地复现、假设、实验、修复、回归流程 |
+| `verification-before-completion` | 在完整增量交付前调；不可用则直接运行项目目标测试与回归 |
 
 如果发现 superpowers 的某个 skill 不够用，**反馈到 superpowers 仓库**，不要在 `using-dev` 里塞副本。
 
@@ -128,3 +138,6 @@
 - ❌ 跳过 `gh issue develop`，用 `git checkout -b` 直接建分支 ——分支不会挂到 issue Development 面板，PR 合入时不会自动 close issue
 - ❌ 同一 commit 混入多个 issue 的改动 ——破坏可逆性
 - ❌ 不读 issue body 直接动手 ——大概率走偏
+- ❌ 用测试数量、覆盖率数字或重复执行次数代替关键风险分析
+- ❌ 每改一个文件就跑全量回归或启动独立评审，打断完整功能开发
+- ❌ 添加不会在真实缺陷出现时失败、没有有效断言的“展示型测试”
