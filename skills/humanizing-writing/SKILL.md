@@ -51,7 +51,7 @@ Then review qualitatively for directness, rhythm, reader trust, authenticity, an
 
 ## Output by Invocation Mode
 
-Return a clean rewritten result by default. When the user provides author samples, use them to guide the result. When the user asks for “only the result,” return only the rewritten text. In file mode, preserve paths, frontmatter, headings, links, code, and the file's requested format; summarize changed files only if requested. In embedded mode, preserve surrounding content and edit only the requested span.
+Return a clean rewritten result by default. When the user asks only to review or audit, use a review-only response: do not rewrite; return concrete issues, risks to facts or protected content, and brief recommendations. Deliver rewritten text only when the user explicitly asks for a rewrite. When the user provides author samples, use them to guide the result. When the user asks for “only the result,” return only the rewritten text. In file mode, preserve paths, frontmatter, headings, links, code, and the file's requested format; summarize changed files only if requested. In embedded mode, preserve surrounding content and edit only the requested span.
 
 ## Quick Reference
 

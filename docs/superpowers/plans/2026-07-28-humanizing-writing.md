@@ -146,7 +146,7 @@ Expected result: the repository contains evidence of at least five micro-test co
 - Consumes: observed failures from Task 1 and language catalogs created in Tasks 3 and 4
 - Produces: the scenario router, mode router, preservation contract, and rewrite-audit-final output contract
 
-- [ ] **Step 1: Read the scaffold metadata requirements**
+- [x] **Step 1: Read the scaffold metadata requirements**
 
 Read these files completely:
 
@@ -155,7 +155,7 @@ sed -n '1,260p' /Users/zhpeng/.codex/skills/.system/skill-creator/references/ope
 python /Users/zhpeng/.codex/skills/.system/skill-creator/scripts/init_skill.py --help
 ```
 
-- [ ] **Step 2: Initialize the skill with the official scaffold**
+- [x] **Step 2: Initialize the skill with the official scaffold**
 
 Run:
 
@@ -170,7 +170,7 @@ python /Users/zhpeng/.codex/skills/.system/skill-creator/scripts/init_skill.py h
 
 Expected result: `skills/humanizing-writing/` contains `SKILL.md`, `agents/openai.yaml`, and an empty `references/` directory.
 
-- [ ] **Step 3: Replace the scaffold with the minimal core skill**
+- [x] **Step 3: Replace the scaffold with the minimal core skill**
 
 Write YAML frontmatter with exactly:
 
@@ -223,7 +223,7 @@ Then review the draft qualitatively for directness, rhythm, reader trust, authen
 
 Use a positive output recipe, not a long prohibition list. Include conditional rules for author samples, “only the result” requests, file mode, and embedded mode.
 
-- [ ] **Step 4: Validate metadata and structure**
+- [x] **Step 4: Validate metadata and structure**
 
 Run:
 
@@ -234,7 +234,7 @@ scripts/check-humanizing-placeholders.sh
 
 Expected: validator reports success; the placeholder-check script exits 0 only when the scan finds no matches.
 
-- [ ] **Step 5: Commit the core workflow**
+- [x] **Step 5: Commit the core workflow**
 
 ```bash
 git add skills/humanizing-writing
@@ -251,7 +251,7 @@ git commit -m "feat: add humanizing writing workflow"
 - Consumes: Chinese input routed by `SKILL.md`
 - Produces: contextual Chinese pattern recognition and rewrite recipes
 
-- [ ] **Step 1: Write the Chinese reference**
+- [x] **Step 1: Write the Chinese reference**
 
 Create a compact table of contents followed by these pattern groups:
 
@@ -278,7 +278,7 @@ For each pattern group, state:
 
 Include the source facts unchanged in every example. Do not turn watch lists into banned-word lists.
 
-- [ ] **Step 2: Forward-test both Chinese application fixtures**
+- [x] **Step 2: Forward-test both Chinese application fixtures**
 
 Dispatch one fresh-context agent with:
 
@@ -318,7 +318,7 @@ Expected:
 - headings no longer warm up by restating themselves
 - wording differs by scene rather than applying casual personality everywhere
 
-- [ ] **Step 3: Patch only observed gaps and re-run**
+- [x] **Step 3: Patch only observed gaps and re-run**
 
 Classify each failure before editing:
 
@@ -329,7 +329,7 @@ Classify each failure before editing:
 
 Re-run the failed fixture until it passes.
 
-- [ ] **Step 4: Commit Chinese guidance**
+- [x] **Step 4: Commit Chinese guidance**
 
 ```bash
 git add skills/humanizing-writing
@@ -346,7 +346,7 @@ git commit -m "docs: add Chinese humanizing patterns"
 - Consumes: English input routed by `SKILL.md`
 - Produces: condensed coverage of the upstream Humanizer and Stop Slop pattern catalogs
 
-- [ ] **Step 1: Write the English reference**
+- [x] **Step 1: Write the English reference**
 
 Add a compact table of contents and organize Humanizer's 33 patterns plus Stop Slop's phrase and structure checks into:
 
@@ -368,7 +368,7 @@ Cover every Humanizer pattern by name or an unambiguous grouped label. Cover Sto
 Adapted from [blader/humanizer](https://github.com/blader/humanizer/blob/main/SKILL.md), version 2.9.1, and [hardikpandya/stop-slop](https://github.com/hardikpandya/stop-slop), both licensed under the MIT License. Humanizer's catalog is based on Wikipedia's "Signs of AI writing" guide.
 ```
 
-- [ ] **Step 2: Forward-test the English and false-positive fixtures**
+- [x] **Step 2: Forward-test the English and false-positive fixtures**
 
 Dispatch one fresh-context agent with:
 
@@ -394,11 +394,11 @@ Expected:
 - output removes promotional significance and unsupported optimism without adding performance claims
 - false-positive Chinese sample keeps approximately one em dash and its parenthetical aside because the author preference is explicit
 
-- [ ] **Step 3: Patch observed gaps and re-run**
+- [x] **Step 3: Patch observed gaps and re-run**
 
 Keep English rules subordinate to explicit author samples. Do not add blanket bans for adverbs, Wh- sentence openers, passive voice, inanimate subjects, em dashes, curly quotes, transition words, formal vocabulary, or polished grammar.
 
-- [ ] **Step 4: Commit English guidance**
+- [x] **Step 4: Commit English guidance**
 
 ```bash
 git add skills/humanizing-writing
@@ -415,7 +415,7 @@ git commit -m "docs: add English humanizing patterns"
 - Consumes: completed `humanizing-writing` skill
 - Produces: public and in-agent discovery entries
 
-- [ ] **Step 1: Add the README skill-table entry**
+- [x] **Step 1: Add the README skill-table entry**
 
 Add after `friendly-python`:
 
@@ -423,7 +423,7 @@ Add after `friendly-python`:
 | **humanizing-writing** | Chinese and English prose cleanup: preserves facts and voice while removing formulaic AI-writing patterns from everyday text, technical docs, and PR descriptions |
 ```
 
-- [ ] **Step 2: Add a concise README capability section**
+- [x] **Step 2: Add a concise README capability section**
 
 Add a `### humanizing-writing` section under `## What's Inside` with bullets covering:
 
@@ -433,7 +433,7 @@ Add a `### humanizing-writing` section under `## What's Inside` with bullets cov
 - author-sample calibration
 - false-positive protection
 
-- [ ] **Step 3: Add the using-devkit discovery entry**
+- [x] **Step 3: Add the using-devkit discovery entry**
 
 Add after `friendly-python`:
 
@@ -441,7 +441,7 @@ Add after `friendly-python`:
 | **humanizing-writing** | 中英文去 AI 味：按日常写作、技术文档和 PR 描述调整表达，同时保留事实与作者语气 |
 ```
 
-- [ ] **Step 4: Run repository validation**
+- [x] **Step 4: Run repository validation**
 
 Run:
 
@@ -451,7 +451,7 @@ npm test
 
 Expected: `scripts/validate.sh` reports all checks passed and includes `humanizing-writing`.
 
-- [ ] **Step 5: Commit discovery integration**
+- [x] **Step 5: Commit discovery integration**
 
 ```bash
 git add README.md skills/using-devkit/SKILL.md
@@ -619,7 +619,7 @@ Sample count: 5 Chinese everyday micro-test runs and 4 application controls (9 t
 
 ### Skill enabled (2026-07-28)
 
-Sample count: 9 baseline controls and 12 skill-enabled samples: five initial everyday runs, four initial application fixtures, and three fresh-context regressions after the observed refinements.
+Task 6 evaluation phase: 12 skill-enabled samples—five initial everyday runs, four initial application fixtures, and three fresh-context regressions after the observed refinements. Tasks 3 and 4 separately require at least four fresh-context forward tests. The plan-wide documented minimum is 16 fresh-context skill-enabled tests; reports may note additional failure reruns without assigning an unsupported exact total.
 
 | Fixture | Baseline problem | Observed skill-enabled result | Status |
 |---|---|---|---|

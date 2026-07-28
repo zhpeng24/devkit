@@ -17,7 +17,7 @@ Treat these as context-sensitive pattern clusters, not a blacklist. First protec
 ## 1. Content patterns
 
 - **Inflated significance, legacy, and trends:** “stands as a testament,” “pivotal,” “evolving landscape,” and claims that an ordinary fact marks a broader shift often add scale without evidence. State the concrete fact; retain a supported historical connection or attributed interpretation.
-- **Notability and media roll-calls:** Do not use an uncontextualized list of outlets, followers, or “independent coverage” as proof that someone matters. Keep sourced coverage when it explains what was said or reported.
+- **Notability and media roll-calls:** Do not use an uncontextualized list of outlets, followers, or “independent coverage” as proof that someone matters. Keep concrete, source-backed outlet names, reporting facts, and follower numbers; remove or rewrite only an unsupported inference that those facts make someone important, famous, or notable. Keep sourced coverage when it explains what was said or reported.
 - **Superficial `-ing` analysis:** Trailing “highlighting,” “fostering,” “showcasing,” “ensuring,” or “reflecting” clauses can decorate an action with an unsupported conclusion. Keep the action and any stated, sourced purpose.
 - **Promotional description:** “Nestled,” “vibrant,” “renowned,” “breathtaking,” “must-visit,” “rich heritage,” and “profound commitment” usually belong in marketing only when the requested voice and evidence support them.
 - **Vague attribution:** Replace “experts say,” “observers note,” and “industry reports” with an actual named, supplied source, or remove the unsupported attribution. Never invent a source.
