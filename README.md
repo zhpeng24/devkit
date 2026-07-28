@@ -7,7 +7,8 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 | Skill | Description |
 |-------|-------------|
 | **using-devkit** | Devkit entry-point: helps agents discover and invoke the available devkit skills |
-| **using-dev** | Developer entry-point: detects task level (L0-L3) and orchestrates `friendly-*`, `github-*`, and superpowers skills end-to-end |
+| **using-dev** | Default developer entry-point: routes repository work through SIES and scales evidence/artifacts from L0 to L3 |
+| **sies-engineering** | Goal-first, evidence-driven engineering: Goal → Explore → Prototype → Evaluate → Refine → Engineer → Regress → Learn |
 | **friendly-python** | Python code cleanup: Pyright strict mode, modern typing, automated formatting (`ruff`), Pylint fix patterns |
 | **humanizing-writing** | Chinese and English prose cleanup: preserves facts and voice while removing formulaic AI-writing patterns from everyday text, technical docs, and PR descriptions |
 | **taste-skill** | Context-aware web design and redesign guidance that respects the existing stack, brand system, accessibility, and real content |
@@ -16,9 +17,9 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 | **imagegen-frontend-mobile** | Image-only native mobile screens and flows for iOS, Android, and cross-platform products |
 | **pptx** | Safe PowerPoint `.pptx`/`.potx` creation, inspection, editing, structural validation, and rendered visual QA |
 | **mihomo-proxy-setup** | User-space Mihomo proxy installer: Clash subscription, Web UI, dev tool wrappers (Cursor/Copilot/Claude), Linux + macOS |
-| **github-create-issue** | Structured GitHub issue creation with `gh` CLI — enforces background, impact, acceptance criteria sections and consistent labeling |
-| **github-issue-workflow** | End-to-end GitHub issue development workflow — triage, develop, code review, ship |
-| **github-product-manager** | Product requirement analysis: clarifies feature ideas and turns scoped requirements into GitHub issues |
+| **github-create-issue** | Adaptive SIES Issue profiles for goals, exploration, prototypes, engineering, bugs, and learning |
+| **github-issue-workflow** | Recovers existing goals/evidence and resumes at the first unresolved SIES decision |
+| **github-product-manager** | Uncertainty-driven product discovery that produces evaluable Goal Contracts |
 
 ## Installation
 
@@ -100,6 +101,25 @@ gemini extensions install https://github.com/zhpeng24/devkit.git
 
 ## What's Inside
 
+### SIES engineering
+
+SIES (Self-Improving Engineering System) is the default development sequence:
+
+```text
+Goal → Explore → Prototype → Evaluate → Refine → Engineer → Regress → Learn
+```
+
+`using-dev` routes repository changes into `sies-engineering`; L0–L3 controls
+how deeply phases are expressed rather than selecting unrelated fixed
+workflows. Tests remain important evidence for goal alignment, stable
+contracts, and real risks. TDD is selected inside Engineering when a stable
+expected behavior makes test-first useful—it is not the lifecycle for every
+change.
+
+GitHub stores recoverable goals, evidence, decisions, and delivery links.
+Issues can move backward to exploration, stop without code, or compress phases
+when the work is deterministic.
+
 ### friendly-python
 
 A comprehensive Python code cleanup skill that enforces:
@@ -168,28 +188,52 @@ A complete user-space proxy installer and manager:
 
 ### github-create-issue
 
-A structured GitHub issue template skill that enforces:
+Selects the smallest useful Issue profile for the current decision:
 
-- **7-section template** — 背景, 已造成问题, 当前状态, 预期改动, 影响范围, 关联, 验收标准
-- **Standardized labels** — `bug`, `optimization`, `architecture`, `innovation`, `tech-debt`, `documentation`, `security`
-- **Title convention** — `[模块] 简述问题或改动`
-- **Section trimming** — auto-adapt required sections by issue type
-- **`gh` CLI execution** — creates labels if missing, generates full `gh issue create` command
+- **Goal/Product** — outcome, success signals, non-goals, and evaluation
+- **Exploration** — hypotheses, evidence plan, budget, and stop condition
+- **Prototype** — minimal artifact boundary and promotion/disposal rule
+- **Engineering/Bug** — selected change, risks, contracts, and verification map
+- **Learning** — evidence-backed proposal for reusable system improvement
+
+It preserves safe `gh issue create --body-file` execution without forcing
+every kind of work into one template or adding a duplicate preview after direct
+authorization.
 
 ### github-issue-workflow
 
-An end-to-end development workflow skill that enforces:
+A phase-aware controller for existing Issues:
 
-- **5-step cycle** — Triage → Plan → Develop → Review → Ship
-- **Overlap detection** — shared-file issues go sequential, independent issues go parallel
-- **Mandatory code review** — never skip even if "tests pass" or "changes are small"
-- **Commit discipline** — one commit per logical group, issue references, excluded tests documented
-- **Rationalization defense** — explicit counters for common shortcuts
+- recovers Goal and Evaluation Contracts from SIES or legacy Issue bodies
+- resumes from the first unsupported decision instead of replaying a workflow
+- allows Evaluation to return to Exploration/Prototype or stop without code
+- chooses branches, worktrees, review depth, and tests from actual risk
+- preserves trusted Issue targeting, body-file safety, traceability, and one
+  delivery regression
+
+### github-product-manager
+
+Builds product Goal Contracts from known evidence and asks only questions whose
+answers can change outcome, scope, evaluation, or irreversible impact. Success
+signals may use user scenarios, metrics, visual results, contracts, or tests;
+“all tests pass” is not a product outcome.
 
 ### Skill Structure
 
 ```
 skills/
+  using-dev/
+    SKILL.md                    # Default repository entry point
+    references/
+      level-decision.md         # L0-L3 depth scaling
+      language-stack.md         # Language/tool detection
+      orchestration-cheatsheet.md
+      system-learning.md
+  sies-engineering/
+    SKILL.md                    # Goal-first engineering lifecycle
+    references/
+      evidence-strategy.md      # Evaluation, TDD selection, regression
+      github-state.md           # GitHub Goal/Evidence state
   friendly-python/
     SKILL.md                    # Main skill document
     references/
@@ -219,9 +263,18 @@ skills/
       launchd-plist.md          # macOS launchd plist files
       troubleshooting.md        # Common issues and fixes
   github-create-issue/
-    SKILL.md                    # Issue creation template & workflow
+    SKILL.md                    # Adaptive Issue creation
+    references/
+      issue-profiles.md
   github-issue-workflow/
-    SKILL.md                    # Issue development lifecycle
+    SKILL.md                    # Phase-aware Issue controller
+    references/
+      issue-sources.md
+  github-product-manager/
+    SKILL.md                    # Product Goal discovery
+    references/
+      question-framework.md
+      issue-template.md
 ```
 
 ## Updating

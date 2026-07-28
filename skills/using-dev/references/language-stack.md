@@ -47,7 +47,7 @@
 默认 + Effective Go。其他流程（issue / plan / 复盘）按 L[N] 正常推进。
 ```
 
-**不阻塞** —— 编码规范缺失不影响 `github-issue-workflow` / `brainstorming` / `writing-plans` 等流程层 skill 的运行。
+**不阻塞** —— 编码规范缺失不影响 `sies-engineering`、GitHub 状态恢复和证据评价。
 
 ## 多语言项目处理
 

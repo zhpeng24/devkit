@@ -1,140 +1,72 @@
-# Product Requirement Issue Template
+# Product Goal Contract Profile
 
-## Template Structure
+Use the sections that carry decision value. Omit optional sections instead of
+filling them with generic prose.
 
 ```markdown
-## 用户故事
-作为 [角色]，我希望 [做什么]，以便 [获得什么价值]。
+## SIES Goal Contract
 
-## 背景与动机
-[这个需求从哪来？解决什么问题？不做会怎样？]
+### Outcome
+[用户或系统将获得的可观察结果]
 
-## 用户场景
-[具体的使用场景描述，1-3 个典型场景]
-1. 场景一：...
-2. 场景二：...
+### Users and scenarios
+[一到三个能体现价值的场景；纯内部工作可省略]
 
-## 当前状态
-[项目中现有的相关功能/代码是什么样的？有什么差距？]
+### Success signals
+- [可观察信号；可以是行为、指标、场景、视觉结果、契约或测试]
 
-## 预期行为
-[详细描述期望的功能表现]
-1. ...
-2. ...
+### Non-goals / MVP
+- Included:
+- Excluded:
 
-## 边界与约束
-[边界情况、技术约束、兼容性要求、性能要求等]
+### Constraints and impact
+[兼容性、性能、政策、时间、影响模块；没有重要约束可省略]
 
-## 竞品/参考
-[有没有参考的实现？竞品是怎么做的？]
+### Key uncertainties
+- [会改变方向或范围的未知项；确定性任务可写 none]
 
-## 影响范围
-[哪些模块/功能会受影响？]
+## Evaluation Contract
+- Decision to make:
+- Evidence:
+- Pass condition:
+- Fail / stop condition:
 
-## MVP 定义
-[最小可行版本包含什么？什么可以后续迭代？]
-
-## 验收标准
-- [ ] 标准 1
-- [ ] 标准 2
-
-## 优先级建议
-[P0-P3 + 理由]
+## Relationships
+[相关 Issue、PR、ADR、用户反馈或参考；未知可省略]
 ```
 
-## Trimming Rules
+## Trimming
 
-Not every issue needs all sections. Trim based on requirement type:
+| Work | Keep |
+|---|---|
+| Small product enhancement | Outcome, Success signals, MVP, Evaluation |
+| Large product feature | All relevant sections |
+| Internal improvement | Outcome, Success signals, Constraints, Evaluation |
+| Exploration | Outcome, Key uncertainties, Evaluation; implementation scope remains open |
+| UX/visual change | Users/scenarios, Success signals, visual/scenario evidence, non-goals |
 
-| Requirement Type | Can Omit |
-|-----------------|----------|
-| Simple feature | 竞品/参考, 边界与约束 |
-| Improvement / Optimization | 用户故事 (if internal improvement) |
-| Large feature | None, all required |
-| UX improvement | MVP 定义 (if no phasing needed) |
+## Labels
 
-## Label System
+Type labels remain compatible with existing repositories:
 
-Before submission, check if labels exist: `gh label list | grep <label>`. Create if missing: `gh label create <label> --color <color> --description "<desc>"`
+| Label | Meaning |
+|---|---|
+| `feature` | New user-facing capability |
+| `enhancement` | Improvement to an existing capability |
+| `ux` | User-experience outcome |
+| `needs-design` | A material decision is still unsupported |
+| `innovation` | Experimental or novel capability |
 
-### Type Labels
+Priority labels: `P0-critical`, `P1-important`, `P2-normal`,
+`P3-nice-to-have`.
 
-| Label | Color | Description |
-|-------|-------|-------------|
-| `feature` | `1d76db` | New feature request |
-| `enhancement` | `0e8a16` | Improvement to existing feature |
-| `ux` | `f9d0c4` | User experience improvement |
-| `needs-design` | `d4c5f9` | Requires further design |
+Add `sies` when the repository uses SIES labels. A current-phase label is
+optional; it never substitutes for evidence.
 
-### Priority Labels
+## Title
 
-| Label | Color | Description |
-|-------|-------|-------------|
-| `P0-critical` | `b60205` | Highest priority |
-| `P1-important` | `d93f0b` | High priority |
-| `P2-normal` | `fbca04` | Normal priority |
-| `P3-nice-to-have` | `c5def5` | Low priority |
+Use `[module] observable outcome`, for example:
 
-## Title Convention
-
-Format: `[模块] 简述需求`
-
-Examples:
 - `[auth] 支持第三方 OAuth 登录`
-- `[editor] 添加 Markdown 实时预览`
-- `[skills] 产品经理式需求分析流程`
-
-## Submission Command
-
-```bash
-issue_body_file="$(mktemp)"
-trap 'rm -f "$issue_body_file"' EXIT
-
-cat >"$issue_body_file" <<'EOF'
-## 用户故事
-...
-
-## 背景与动机
-...
-
-## 用户场景
-...
-
-## 当前状态
-...
-
-## 预期行为
-...
-
-## 边界与约束
-...
-
-## 竞品/参考
-...
-
-## 影响范围
-...
-
-## MVP 定义
-...
-
-## 验收标准
-- [ ] ...
-
-## 优先级建议
-...
-EOF
-
-gh issue create \
-  --title "[模块] 简述需求" \
-  --label "label1,label2" \
-  --body-file "$issue_body_file"
-```
-
-## Multi-Issue Splitting
-
-When a requirement is split into multiple issues:
-
-1. List all sub-requirement titles and summaries for user confirmation
-2. Create them one by one, adding a "关联" section at the end of each issue body to cross-reference issue numbers
-3. After all are created, return a summary with all URLs
+- `[editor] 降低长文预览延迟`
+- `[skills] 以 SIES 作为默认研发序列`

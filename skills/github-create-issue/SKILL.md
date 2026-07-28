@@ -1,145 +1,98 @@
 ---
 name: github-create-issue
-description: Use when a GitHub issue needs to be created for a bug, feature, architecture change, optimization, documentation, security, or tech-debt item.
+description: Use when a GitHub issue needs to be created for a product goal, exploration, prototype, bug, feature, architecture change, optimization, learning, documentation, security, or tech-debt item.
 ---
 
-# Create Issue
+# Adaptive GitHub Issue Creation
 
-Structured GitHub issue creation with `gh issue create`. Every issue answers: **为什么要做、造成了什么后果、现在什么样、要改成什么样、影响多大、怎么验收**。
+Create the smallest Issue that preserves the current SIES decision. Do not
+force discovery, experiments, Engineering, and learning into one static
+seven-section template.
 
-## Quality Gate
+## Select an Issue Profile
 
-Do not create the issue until all checks pass:
+Read `references/issue-profiles.md` and select by the Issue's immediate purpose:
 
-- **Single outcome:** one bug, one behavior change, one cleanup theme, or one architectural decision.
-- **Bounded scope:** affected modules/files are named or discoverable from the body.
-- **Enough context:** the current state includes evidence, examples, paths, screenshots, logs, or reproduction notes when available.
-- **Actionable change:** expected changes are specific enough for a developer to start.
-- **Verifiable acceptance:** every acceptance criterion is observable by test, command, UI check, or review checklist.
-- **Traceability:** related PRs, issues, commits, ADRs, or user reports are linked when known.
+| Purpose | Profile |
+|---|---|
+| Define a product or system Outcome | Goal / Product |
+| Resolve a consequential unknown | Exploration |
+| Produce evidence with a minimal artifact | Prototype |
+| Deliver a selected solution or repair | Engineering / Bug |
+| Propose a reusable system improvement | Learning |
 
-If any check fails, ask a clarifying question or split the issue before creation.
+The profile may change as evidence grows. Update or comment on the existing
+tracking Issue rather than creating a new Issue for every SIES phase.
 
-## Split Rules
+## Common Quality Gate
 
-Split instead of creating one broad issue when any condition is true:
+Before creation, confirm:
 
-- The request contains 2+ independent user scenarios.
-- Different parts could ship independently.
-- The change spans unrelated modules or labels.
-- Acceptance criteria can pass independently.
-- The issue mixes discovery/design with implementation.
+- **Primary Outcome:** one result owns the Issue, even if it spans several
+  phases;
+- **Current decision:** the Issue states what must be decided or delivered now;
+- **Bounded uncertainty:** unknowns are explicit rather than hidden as facts;
+- **Evaluable evidence:** success, failure, or stop can be observed;
+- **Traceability:** known Issue, PR, ADR, incident, or user-report links exist;
+- **No duplicate:** an existing open Issue does not already own the Outcome.
 
-Use a parent tracking issue only when coordination matters. Child issues must still be implementation-ready and independently verifiable.
+An Exploration Issue need not be implementation-ready. An Engineering Issue
+must be.
 
-## Template
+## Split by Independence
 
-```markdown
-## 背景
-[为什么这个问题/需求存在？来源是什么？（code review、用户反馈、架构设计…）]
+Create child Issues only when work can be decided, rejected, shipped, or
+parallelized independently. A single tracking Issue may legitimately contain
+Goal, Exploration, Evaluation, and Engineering history for one Outcome.
 
-## 已造成问题
-[当前状态下产生了什么负面影响？不修复会怎样？]
-- 影响 1
-- 影响 2
+## Authorization
 
-## 当前状态
-[相关代码/系统目前是什么样的？贴关键代码片段或文件路径]
+- Explicit “create”, “submit”, “直接建” or equivalent language authorizes the
+  GitHub write; do not add a duplicate preview gate.
+- Draft-only or analysis requests do not authorize creation.
+- Ask one question only when a missing answer changes the primary Outcome,
+  evaluation, scope, or irreversible impact.
 
-## 预期改动
-[要改成什么样？分步骤列出]
-1. 步骤一
-2. 步骤二
+## Labels
 
-## 影响范围
-[哪些模块/文件/功能会受影响？]
+Preserve repository labels when they already express the work. Common labels:
 
-## 关联
-[关联 PR、commit、设计文档、其他 issue]
+`bug`, `feature`, `enhancement`, `architecture`, `optimization`, `innovation`,
+`tech-debt`, `documentation`, `security`, `ux`, `needs-design`, and `P0`–`P3`.
 
-## 验收标准
-[满足什么条件视为完成？尽量可测试]
-- [ ] 标准 1
-- [ ] 标准 2
-```
+Add `sies` or a current-phase label only when the repository benefits from
+querying it. Create missing labels only as part of an authorized Issue action.
 
-## 标签体系
+## Safe Submission
 
-创建 issue 前检查标签是否存在，不存在则用 `gh label create` 创建。
-
-| 标签 | 颜色 | 说明 | 适用场景 |
-|------|------|------|----------|
-| `bug` | `d73a4a` | 已有功能出错 | 测试失败、运行时异常、数据错误 |
-| `optimization` | `0e8a16` | 性能/体验/代码质量优化 | 速度慢、冗余代码、UX 改善 |
-| `architecture` | `1d76db` | 架构层面变更 | 分层调整、依赖方向、模块拆分 |
-| `innovation` | `f9d0c4` | 新能力/创新点 | 新 skill、新 tool、新 pipeline 阶段 |
-| `tech-debt` | `d4c5f9` | 技术债务清理 | 遗留代码、TODO 清理、迁移 |
-| `documentation` | `0075ca` | 文档补充或修正 | ADR、README、设计文档 |
-| `security` | `b60205` | 安全相关 | 权限、输入校验、密钥管理 |
-
-## Title 规范
-
-格式：`[模块] 简述问题或改动`
-
-- `[gateway] FeishuGateway 未使用 IncomingMessage`
-- `[pipeline] deep_read 超时未设上限`
-- `[agent/tools] follow_author 大小写不去重`
-
-## Section 裁剪规则
-
-不是每种 issue 都需要全部 7 个 section。按类型裁剪：
-
-| 类型 | 可省略 |
-|------|--------|
-| `bug` | 预期改动（如果 fix 显而易见） |
-| `optimization` | 已造成问题（如果是锦上添花） |
-| `architecture` | 无，全部必填 |
-| `innovation` | 当前状态（如果是全新功能） |
-| `tech-debt` | 关联（如果是独立清理） |
-
-## 执行流程
-
-1. Run the Quality Gate and Split Rules.
-2. 确认标签存在：`gh label list | grep <label>` → 不存在则 `gh label create <label> --color <color> --description "<desc>"`
-3. 填充模板各 section
-4. 生成命令：
-
-安全规则：
-- Issue 正文必须通过文件传给 `gh`，不要把多行正文放进 `--body "$(cat ...)"`。
-- `--title` 只能使用单行标题；如果标题来自用户输入，先去掉换行。
-- 需要后续评论或关闭 issue 时，只使用 `gh issue create` 返回的 URL 或 `gh issue view <url> --json number` 得到的数字编号作为目标。
+- Sanitize the title to one line.
+- Pass generated Markdown through `--body-file`, never command substitution.
+- Use the returned URL or structured `gh issue view <url> --json number` output
+  for later mutation.
 
 ```bash
 issue_body_file="$(mktemp)"
 trap 'rm -f "$issue_body_file"' EXIT
 
 cat >"$issue_body_file" <<'EOF'
-## 背景
+## SIES Goal Contract
 ...
-
-## 已造成问题
-...
-
-## 当前状态
-...
-
-## 预期改动
-...
-
-## 影响范围
-...
-
-## 关联
-...
-
-## 验收标准
-- [ ] ...
 EOF
 
 gh issue create \
-  --title "[模块] 简述" \
-  --label "label1,label2" \
+  --title "[module] observable outcome" \
+  --label "feature,sies" \
   --body-file "$issue_body_file"
 ```
 
-5. 确认 issue 创建成功后返回 URL
+After creation, return the URL, selected profile, and next unresolved decision.
+
+## Red Flags
+
+- Filling optional sections with generic prose;
+- defining acceptance only as “all tests pass”;
+- pretending an unknown solution is already selected;
+- splitting every lifecycle phase into a separate Issue;
+- mixing independent Outcomes because they share a release date;
+- creating GitHub state when the user requested only a draft;
+- asking for a preview after the user already authorized direct creation.

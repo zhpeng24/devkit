@@ -1,85 +1,75 @@
-# Question Framework
+# Uncertainty-Driven Product Questions
 
-## Clarification Dimensions
+## Decision-Value Rule
 
-Progress through the following in order, adaptively skipping unnecessary dimensions based on context.
+Ask a question only when its answer can change at least one of:
 
-| Phase | Dimension | Core Question | When to Skip |
-|-------|-----------|--------------|--------------|
-| 1 | Core Intent | What problem are you trying to solve? / What do you want to achieve? | Never skip |
-| 2 | Target Users | Who will use this feature? Under what circumstances? | When user has clearly stated |
-| 3 | User Scenarios | Describe a typical usage flow | Never skip |
-| 4 | Pain Points / Current State | How is it done now? What's wrong with it? | Brand-new feature with no existing alternative |
-| 5 | Expected Behavior | Ideally, how should it work? | Never skip |
-| 6 | Edge Cases | How should exceptions be handled? Any limitations? | Simple requirements |
-| 7 | Relationship with Existing Features | Which existing features will it affect or depend on? | Completely independent new feature |
-| 8 | Competitors / References | Have you seen a similar good implementation? | When user explicitly has no references |
-| 9 | Priority & Scope | How urgent is this? What does the MVP include? | Never skip |
+- the Outcome or target user;
+- the MVP/non-goal boundary;
+- the success signal or Evaluation Contract;
+- a high-impact constraint or irreversible action;
+- whether to explore, prototype, engineer, or stop.
 
-## Strategy Rules
+Do not ask merely because a template has an empty optional section.
 
-### 1. Prefer Multiple-Choice Options
+## Goal Dimensions
 
-Provide A/B/C/D options for each question whenever possible to reduce cognitive load. Options should be generated based on project context and common patterns, not generic placeholders.
+| Dimension | Decision it supports | Skip when |
+|---|---|---|
+| Outcome | What changes for the user or system? | Never, but infer when explicit |
+| User/scenario | Who experiences the value and when? | Internal mechanical work |
+| Current gap | Why does current behavior miss the goal? | Brand-new capability with clear motivation |
+| Success signals | What observable evidence means success? | Never |
+| Non-goals/MVP | What must not expand this iteration? | Truly atomic request |
+| Constraints | Compatibility, policy, performance, timing | No relevant constraint |
+| Key uncertainties | What could reverse the decision? | Deterministic work |
+| Evidence | How will the outcome be evaluated? | Never |
+| Priority | What trade-off does urgency justify? | User already set it |
 
-**Good example:**
-> Who is the target user for this feature?
-> - A) End users of the project
-> - B) Internal development team
-> - C) Third-party integration developers
-> - D) All of the above, but with different priorities
+## Modes
 
-**Bad example:**
-> Please describe the target users.
+### Direct and Sufficient
 
-### 2. Leverage Project Context
+The user supplied an evaluable goal and authorized submission. State any safe
+assumptions in the draft and create the Issue without another questionnaire or
+preview.
 
-Combine code and issues discovered in Phase 1 to offer specific options rather than abstract questions.
+### Material Gap
 
-**Good example:**
-> I see the project has three core modules: `auth`, `editor`, and `pipeline`. Which one does this requirement mainly affect?
-> - A) auth — user authentication
-> - B) editor — editor functionality
-> - C) pipeline — data processing flow
-> - D) Cross-module, needs a new module
+Ask one question at a time. Prefer options grounded in repository context when
+they reduce effort, but do not force multiple choice when the user needs to
+describe a novel outcome.
 
-**Bad example:**
-> Which modules will this requirement affect?
+### Exploration
 
-### 3. Progressive Depth
+When the answer is unknowable through conversation, stop asking and create an
+Exploration or Prototype profile with:
 
-The first 3 dimensions (core intent, target users, user scenarios) quickly establish the basic picture. Subsequent dimensions build on that with more detail. Don't ask about "edge cases" before the user has clearly explained "what they want to do."
+- the unknown;
+- competing hypotheses;
+- evidence to collect;
+- pass/fail/stop conditions;
+- budget or boundary.
 
-### 4. Adaptive Exit
+## Assumptions
 
-When enough information has been collected to fill the required fields of the issue template (user story, background & motivation, user scenarios, expected behavior, acceptance criteria), proactively suggest:
+Use a safe assumption only when it is reversible and does not change user
+impact. State it once. High-impact assumptions become questions or explicit
+exploration hypotheses.
 
-> "I think we have enough information to draft the issue. Ready to move to the drafting phase? Or is there anything important we haven't covered?"
+## Split Test
 
-Don't mechanically go through all 9 dimensions.
+Split into child Issues when outcomes can be decided, shipped, or rejected
+independently. Do not split one Outcome merely because it passes through
+Explore, Prototype, Evaluate, and Engineer.
 
-### 5. Split Detection
+## Exit Condition
 
-If during clarification you discover the user is actually describing 2+ independent requirements (signs: multiple distinct user scenarios, multiple unrelated features, "also, I'd like to..."), suggest splitting immediately after the current question:
+Stop clarification when the Issue can answer:
 
-> "What you've described actually contains two independent requirements: X and Y. I'd suggest splitting them into two issues so each can be scoped and verified independently. What do you think? Which one should we focus on first?"
+1. What result are we seeking?
+2. What is outside this iteration?
+3. What evidence distinguishes success, failure, and stop?
+4. What is the next unresolved decision?
 
-## Questioning Style
-
-- **Like a colleague chat, not a form** — natural conversation, not mechanical Q&A
-- **Restate to confirm** — briefly restate the user's answer and confirm understanding before asking the next question
-- **Don't accept vagueness** — if the user's answer is vague ("something like that", "more or less"), ask concrete follow-ups to help them think it through rather than accepting it
-- **Summarize periodically** — after every 3-4 dimensions, summarize current understanding in 2-3 sentences and let the user confirm direction
-
-## Handling Vague Answers — Example
-
-**User says:** "I just want to make it better"
-
-**Don't:** Accept it and move to the next question
-
-**Do:**
-> When you say "better," can you be more specific about what's not working well right now?
-> - A) Too many steps, need to simplify the workflow
-> - B) Too slow, need performance optimization
-> - C) Information display is unclear, need UI improvements
-> - D) Other — please describe the specific inconvenience
+Continuing after these are answered is process overhead, not product discovery.

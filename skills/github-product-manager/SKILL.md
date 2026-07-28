@@ -1,128 +1,94 @@
 ---
 name: github-product-manager
-description: Use when a user describes a product requirement, feature idea, user need, or ambiguous request that should become one or more GitHub issues.
+description: Use when a user describes a product requirement, feature idea, user need, or ambiguous outcome that should be clarified, evaluated, or persisted in GitHub.
 ---
 
-# Product Manager
+# Product Goal Discovery
 
-Act as an experienced product manager, helping users refine vague ideas into structured product requirement issues through multi-round dialogue, then submit them to GitHub.
+Turn product intent into a SIES Goal Contract and, when authorized, a GitHub
+Issue. The purpose is to close decisions that matter, not to complete a fixed
+questionnaire.
 
-Works for all roles (developers, non-technical users, product managers) and adapts to any input from a single sentence to multi-paragraph descriptions.
+This skill does not design architecture or implement code.
 
-## Hard Constraints
+## Start With Existing Evidence
 
-- **No code** — this skill only produces issues, no technical design or code implementation
-- **Never skip clarification** — even if the user provides a detailed description, always confirm at least core intent, user scenarios, and acceptance criteria
-- **Never skip preview** — issues must be confirmed by the user before submission
-- **One question at a time** — during clarification, ask only one question per round
+Read only the context needed to understand the request:
 
-## Process
+- user-provided goals and examples;
+- relevant README, product docs, code paths, issues, and recent decisions;
+- existing Goal Contract, if one already exists.
 
-Execute the following 5 phases in strict order:
+Do not scan the whole repository, list every PR, or ask the user to reconfirm
+facts that are already reliable. Summarize assumptions only when a wrong
+assumption would change scope or success.
 
-### Phase 1: Project Context Discovery
+## Build the Decision Map
 
-Perform the following automatically without user involvement:
+Read `references/question-framework.md`. Classify each Goal Contract field as:
 
-1. Scan project structure — file tree, README, key config files
-2. Review recent git history — `git log --oneline -20`
-3. Review existing open issues — `gh issue list --state open --json number,title,labels`
-4. Review recent PRs — `gh pr list --state all --limit 10 --json number,title,state`
+- **known** — supported by the request or repository evidence;
+- **safe assumption** — low-impact and reversible; state it briefly;
+- **blocking unknown** — the answer changes outcome, scope, evaluation, or an
+  irreversible action.
 
-Produce a project context summary (3-5 sentences) and present it to the user:
+Ask one concise question only for a blocking unknown. If the contract is already
+evaluable, draft it immediately.
 
-> "Before analyzing your requirement, let me share what I've learned about the project: [summary]. Does this look right?"
+## Goal Contract
 
-Wait for user confirmation before proceeding to Phase 2. If the user corrects any understanding, update the summary and continue.
+Read `references/issue-template.md` and capture:
 
-### Phase 2: Requirement Clarification & Deep Analysis
+- Outcome and affected users or systems;
+- success signals;
+- non-goals and MVP boundary;
+- constraints and impact;
+- key uncertainties;
+- Evaluation Contract: decision, evidence, and pass/fail/stop conditions.
 
-Read `references/question-framework.md` and follow the question framework for deep analysis:
+Success signals must be observable but do not all need to be automated tests.
+Use user scenarios, runtime behavior, metrics, visual evidence, contracts, or
+tests according to the goal.
 
-**Interaction Rules:**
-- One question at a time, prefer multiple-choice options (A/B/C/D)
-- Use Phase 1 project context to generate specific options rather than abstract questions
-- Briefly restate/confirm the user's answer before asking the next question
-- If the user's answer is vague, ask concrete follow-ups to help them think it through
+## Choose the Next Artifact
 
-**Clarification Dimensions (in order):**
-1. Core intent (never skip)
-2. Target users (skip if already clearly stated)
-3. User scenarios (never skip)
-4. Pain points / current state (skip for brand-new features)
-5. Expected behavior (never skip)
-6. Edge cases (skip for simple requirements)
-7. Relationship with existing features (skip if completely independent)
-8. Competitors / references (skip if user has no references)
-9. Priority & scope (never skip)
+| Current state | Next artifact |
+|---|---|
+| Goal is clear and Engineering can start | Product Goal / Engineering Issue |
+| A product or technical assumption still dominates risk | Exploration or Prototype Issue |
+| Evidence is already sufficient | Decision record or implementation handoff |
+| Outcome is not worth pursuing | Stop decision; do not manufacture an Issue |
 
-**Adaptive exit:** When enough information has been collected to fill the required fields of the issue template, proactively suggest moving to the drafting phase.
+Use `github-create-issue` for profile selection and safe submission.
 
-**Split detection:** If the user's description contains 2+ independent requirements, immediately suggest splitting and let the user choose which to focus on first.
+## Authorization and Preview
 
-**MVP slicing:** For feature requests, define the smallest shippable behavior that proves value. Anything not required for that behavior becomes a follow-up issue, not acceptance criteria in the MVP issue.
+- If the user explicitly asks to create/submit the Issue or says to proceed
+  directly, that is submission authorization. Do not add a duplicate preview
+  gate.
+- If the user asks only to analyze, draft, or discuss, return a draft without
+  changing GitHub.
+- If a blocking unknown remains, ask before submission even when creation was
+  requested; do not invent a high-impact product decision.
+- When showing a preview would expose a material assumption, preview that
+  assumption and the affected section rather than replaying the entire process.
 
-### Phase 3: Requirement Synthesis & Issue Draft
+## Submission
 
-Read `references/issue-template.md` and populate the template with the analysis results:
+Before submission:
 
-1. Tailor template sections based on requirement type (see template trimming rules)
-2. Select appropriate type and priority labels from the label system
-3. Generate title following the convention: `[模块] 简述需求`
-4. If splitting is needed, prepare separate drafts for each sub-issue
-5. Run the github-create-issue Quality Gate before previewing any draft
+1. Check for a substantially overlapping open Issue.
+2. Confirm the Issue has one primary Outcome; use a tracking Issue when one
+   Outcome legitimately spans exploration and Engineering.
+3. Select type/priority labels and a SIES profile.
+4. Pass the body through a temporary file to `gh issue create --body-file`.
+5. Return the created URL and state which decision or phase comes next.
 
-### Phase 4: User Preview & Revision
+## Stop Signals
 
-Present the complete issue preview to the user:
-
-```
-📋 Issue 预览
-━━━━━━━━━━━━━
-标题：[模块] 简述需求
-标签：feature, P1-important
-━━━━━━━━━━━━━
-（完整 issue 正文）
-━━━━━━━━━━━━━
-```
-
-Ask the user:
-> "Here's the complete issue preview. You can:
-> - A) Confirm and submit
-> - B) Modify a section (tell me what to change)
-> - C) Split into multiple issues
-> - D) Cancel, don't submit"
-
-If the user requests changes, adjust and re-present the preview. Loop until the user confirms.
-
-### Phase 5: Submission
-
-After user confirmation, execute the submission:
-
-1. Check if required labels exist; create any that don't
-2. Run `gh issue create` to submit the issue. Always pass generated issue bodies via `--body-file`; do not embed multi-line Markdown in a quoted `--body "$(cat ...)"` argument.
-3. If there are multiple issues, create them one by one, cross-referencing each other at the end of the body
-4. Return all created issue URLs
-
-```bash
-issue_body_file="$(mktemp)"
-trap 'rm -f "$issue_body_file"' EXIT
-
-cat >"$issue_body_file" <<'EOF'
-（issue 正文）
-EOF
-
-gh issue create \
-  --title "[模块] 简述需求" \
-  --label "label1,label2" \
-  --body-file "$issue_body_file"
-```
-
-## Red Lines — Stop Immediately If:
-
-- About to skip clarification and jump to issue generation → go back to Phase 2
-- About to skip preview and submit directly → go back to Phase 4
-- User's answers contradict each other → point out the contradiction and help clarify
-- Requirement highly overlaps with an existing open issue → inform the user and suggest adding to the existing issue instead of creating a new one
-- Draft contains multiple independently shippable outcomes → split before preview
-- Acceptance criteria cannot be verified → clarify before preview
+- Success cannot be observed even with a proxy signal;
+- different user outcomes have been bundled into one deliverable;
+- a risky assumption is being presented as a known fact;
+- acceptance is defined only as “tests pass” without a user or system outcome;
+- clarification is continuing even though no unanswered question can change the
+  Issue.
