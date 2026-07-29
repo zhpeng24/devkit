@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deployment Operations"
+  short_description: "Deploy, diagnose, verify, and roll back safely"
+  default_prompt: "Use $deployment-operations to deploy this project safely and verify the target environment."

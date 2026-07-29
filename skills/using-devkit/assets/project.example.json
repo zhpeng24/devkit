@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "project": {
+    "name": "example-service",
+    "timezone": "Asia/Shanghai",
+    "canonical_workspace": "/path/to/example-service",
+    "repository": "owner/example-service",
+    "primary_branch": "main"
+  },
+  "sies": {
+    "default_depth": "L1",
+    "success_notes": [
+      "User-facing readiness matters more than process liveness."
+    ],
+    "risk_notes": [
+      "Production data changes require explicit authorization."
+    ]
+  },
+  "commands": {
+    "bootstrap": ["npm ci"],
+    "dev": ["npm run dev"],
+    "target_test": ["npm test -- --runInBand"],
+    "regression": ["npm test"],
+    "lint": ["npm run lint"],
+    "typecheck": ["npm run typecheck"],
+    "build": ["npm run build"],
+    "package": []
+  },
+  "development": {
+    "singleton": true,
+    "supervisor": "tmux:example-service-dev",
+    "services": ["api", "web", "worker"],
+    "dependency_policy": "Use the project-approved dependencies; do not invent fallbacks."
+  },
+  "environments": {
+    "testing": {
+      "ssh": "deploy@example-test",
+      "workdir": "/srv/example-service",
+      "branch": "test",
+      "runtime": "docker-compose",
+      "compose_files": ["deploy/docker-compose.yml"],
+      "health_checks": [
+        "http://127.0.0.1:8080/healthz",
+        "http://127.0.0.1:8080/readyz"
+      ],
+      "deploy_commands": [
+        "docker compose -f deploy/docker-compose.yml config --quiet",
+        "docker compose -f deploy/docker-compose.yml up -d --build"
+      ],
+      "rollback_commands": [
+        "docker compose -f deploy/docker-compose.yml up -d --no-deps api web worker"
+      ]
+    },
+    "production": {
+      "ssh": "deploy@example-production",
+      "workdir": "/srv/example-service",
+      "branch": "main",
+      "runtime": "docker-compose",
+      "compose_files": ["deploy/docker-compose.yml"],
+      "health_checks": [
+        "http://127.0.0.1:8080/healthz",
+        "http://127.0.0.1:8080/readyz"
+      ],
+      "deploy_commands": [],
+      "rollback_commands": []
+    }
+  },
+  "statistics": {
+    "environment": "production",
+    "engine": "postgresql",
+    "database": "example",
+    "readonly_role": "example_stats_ro",
+    "credential_ref": "managed-outside-repository",
+    "access": "docker-compose-service",
+    "compose_file": "deploy/docker-compose.yml",
+    "compose_service": "postgres",
+    "statement_timeout": "30s",
+    "lock_timeout": "3s",
+    "approved_relations": [
+      "stats.daily_usage",
+      "stats.tenant_summary"
+    ]
+  },
+  "reporting": {
+    "archive_dir": "docs/reports",
+    "timezone": "Asia/Shanghai",
+    "weekly_period": "monday-sunday",
+    "weekly_label_day": "friday",
+    "monthly_rollup": true,
+    "tracker": "auto",
+    "categories": ["feature", "bug", "hotfix", "release", "epic"]
+  }
+}

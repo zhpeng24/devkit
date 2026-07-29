@@ -1,6 +1,6 @@
 ---
 name: pptx
-description: Use when reading, creating, editing, or validating a Microsoft PowerPoint .pptx or .potx artifact.
+description: Use when reading, creating, editing, or validating a Microsoft PowerPoint .pptx or .potx artifact, including repository-backed weekly, monthly, project-status, architecture, MVP, release, and executive report decks.
 ---
 
 # PowerPoint Artifacts
@@ -14,6 +14,7 @@ Work on the PowerPoint file itself. Preserve source artifacts, choose tools from
 | Inspect/read | Extract slide order, text, notes, media, layouts, and document properties without changing the file. |
 | Create | Build a new deck from supplied content, brand rules, and an explicit slide outline. |
 | Edit/template | Use the supplied deck or template, preserve its masters and layout language, and write a new output file. |
+| Repository report | Build a weekly, monthly, project-status, architecture, MVP, or release deck from traceable repository evidence. |
 
 Generic presentation advice without a `.pptx` or `.potx` deliverable is outside this skill.
 
@@ -24,6 +25,8 @@ Generic presentation advice without a `.pptx` or `.potx` deliverable is outside 
 3. Use a compatible installed option—such as PptxGenJS, python-pptx, or Open XML tooling—rather than assuming a package is present. Add and pin a dependency only when normal project work authorizes it.
 4. Detect renderers independently. LibreOffice, PowerPoint, or another renderer may be absent; record that limitation instead of claiming visual verification.
 5. Use a task-scoped temporary directory for extracted or rendered files. Reject archive entries that escape it.
+6. For repository reports, read `.devkit/project.json` and
+   `references/repository-reporting.md` before collecting data or choosing cadence.
 
 ## Inspect or edit
 
@@ -38,6 +41,26 @@ For template work, use existing masters/layouts and brand assets. Do not flatten
 Start with an outline that maps one main message to each slide. Set the slide size, theme fonts, palette, margins, and reusable layouts before adding content.
 
 Use concise titles, readable body text, visual evidence that supports the point, and consistent alignment. Keep charts honest, label units and sources, provide useful alt text where tooling permits, and avoid fake data or decorative clutter.
+
+## Repository reports
+
+Separate evidence collection, narrative authoring, and deck rendering:
+
+1. Resolve the reporting period, audience, tracker, archive location, categories,
+   and cadence from the user, repository history, and optional project profile.
+2. Gather repository and tracker evidence. Degrade transparently when an API or
+   credential is unavailable; never make a partial deck look complete.
+3. Preserve a diffable narrative source and a machine-readable evidence snapshot
+   next to the deck when the project expects recurring reports.
+4. Compare the previous period's plan with current evidence before writing the
+   next plan. Keep plan items concrete enough to evaluate in the next report.
+5. Choose a narrative arc that matches the report: weekly delivery, monthly
+   rollup, or early-stage architecture/MVP. Do not force every report into one
+   fixed slide order.
+
+Use `references/repository-reporting.md` for data provenance, metric interpretation,
+archive defaults, and report-specific narrative structures. Project parameters
+override those defaults when they remain compatible with the user's request.
 
 ## Verify
 

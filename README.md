@@ -1,6 +1,7 @@
 # Devkit
 
-Developer toolkit — a collection of coding skills for AI agents, usable across all major platforms.
+Developer toolkit — reusable engineering, operations, reporting, writing, and
+artifact skills for AI agents across major coding platforms.
 
 ## Skills
 
@@ -14,7 +15,9 @@ Developer toolkit — a collection of coding skills for AI agents, usable across
 | **image-to-code-skill** | Faithful web implementation from screenshots, Figma frames, and approved visual references with viewport-based comparison |
 | **imagegen-frontend-web** | Image-only website concepts and section references with coherent art direction and implementation-readable detail |
 | **imagegen-frontend-mobile** | Image-only native mobile screens and flows for iOS, Android, and cross-platform products |
-| **pptx** | Safe PowerPoint `.pptx`/`.potx` creation, inspection, editing, structural validation, and rendered visual QA |
+| **pptx** | Safe PowerPoint creation/editing plus traceable weekly, monthly, architecture, MVP, release, and project-status reporting |
+| **deployment-operations** | Target-aware deployment, release, rollback, runtime diagnosis, health verification, and incident response |
+| **production-statistics** | Explicit production metrics through dedicated read-only database access and sanitized aggregate outputs |
 | **mihomo-proxy-setup** | User-space Mihomo proxy installer: Clash subscription, Web UI, dev tool wrappers (Cursor/Copilot/Claude), Linux + macOS |
 | **github-create-issue** | Adaptive SIES Issue profiles for goals, exploration, prototypes, engineering, bugs, and learning |
 | **github-issue-workflow** | Recovers existing goals/evidence and resumes at the first unresolved SIES decision |
@@ -119,6 +122,18 @@ GitHub stores recoverable goals, evidence, decisions, and delivery links.
 Issues can move backward to exploration, stop without code, or compress phases
 when the work is deterministic.
 
+### Project profiles
+
+Projects can commit `.devkit/project.json` to provide reusable skills with
+project-specific facts without hardcoding them into Devkit. The profile can
+declare native commands, canonical workspaces, development-process rules,
+testing/staging/production targets, health checks, approved statistics access,
+and reporting cadence.
+
+Copy `skills/using-devkit/assets/project.example.json` as a starting point.
+Profiles contain defaults, not authorization, and must never contain passwords,
+tokens, private keys, or other secrets.
+
 ### friendly-python
 
 A comprehensive Python code cleanup skill that enforces:
@@ -171,7 +186,27 @@ states. Frame-free implementation references are supported.
 A clean-room PowerPoint workflow for reading, creating, and safely editing
 `.pptx`/`.potx` files. It preserves the source, preflights available libraries
 and renderers, checks package/content integrity, and distinguishes completed
-visual QA from unverified rendering.
+visual QA from unverified rendering. Repository-backed reporting adds real
+git/tracker provenance, previous-plan comparison, stable metric definitions,
+diffable `report.md` + `data.json` sources, recurring archives, and weekly,
+monthly, architecture, MVP, release, or project-status narrative arcs.
+
+### deployment-operations
+
+A target-aware operations workflow for planning, deployment, local runtime
+startup, diagnosis, rollback, and hardening. It reads project-native contracts
+and optional project-profile environments, starts with bounded read-only
+evidence, distinguishes liveness from readiness, changes the smallest coherent
+unit, and repeats the original probe before declaring recovery.
+
+### production-statistics
+
+A narrow production reporting workflow separated from deployment and
+development. It requires explicit production-statistics intent, a dedicated
+read-only account, bounded aggregate queries, database-native read-only
+transactions and timeouts, sanitized tables/charts, and transparent metric
+definitions. DDL, DML, repair, raw PII exports, and administrator shortcuts are
+outside the skill.
 
 ### mihomo-proxy-setup
 
@@ -223,9 +258,12 @@ signals may use user scenarios, metrics, visual results, contracts, or tests;
 skills/
   using-devkit/
     SKILL.md                    # Unified discovery and repository entry
+    assets/
+      project.example.json      # Copyable project parameter template
     references/
       level-decision.md         # L0-L3 depth scaling
       language-stack.md         # Language/tool detection
+      project-profile.md        # .devkit/project.json discovery and schema
       orchestration-cheatsheet.md
       system-learning.md
   sies-engineering/
@@ -254,6 +292,17 @@ skills/
     SKILL.md                    # Image-only mobile flows
   pptx/
     SKILL.md                    # PowerPoint artifact workflow
+    references/
+      repository-reporting.md   # Traceable weekly/monthly/project reporting
+  deployment-operations/
+    SKILL.md                    # Deploy, diagnose, verify, and roll back
+    references/
+      deployment-playbook.md
+      incident-response.md
+  production-statistics/
+    SKILL.md                    # Safe production aggregate statistics
+    references/
+      read-only-database.md
   mihomo-proxy-setup/
     SKILL.md                    # Installation/uninstall flow
     references/

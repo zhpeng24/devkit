@@ -16,9 +16,11 @@ Engineering 阶段内按需选择的策略。
 ## Start From State
 
 1. 读取用户目标、仓库状态、现有 Issue/PR/ADR 和相关实现。
-2. 恢复已有 Goal Contract 与证据；不要重新执行已经关闭的阶段。
-3. 判断复杂度、风险和不确定性，决定每个阶段需要多深。
-4. 用户说“直接改”时压缩产物和沟通，不反复确认；仍保留最小目标、风险判断和交付验证。
+2. 读取已发现的 `.devkit/project.json` 中 `project`、`sies` 和
+   `commands`；参数提供项目默认值，不能降低事实风险对应的 SIES 深度。
+3. 恢复已有 Goal Contract 与证据；不要重新执行已经关闭的阶段。
+4. 判断复杂度、风险和不确定性，决定每个阶段需要多深。
+5. 用户说“直接改”时压缩产物和沟通，不反复确认；仍保留最小目标、风险判断和交付验证。
 
 GitHub 参与任务时，读取 `references/github-state.md`。选择 Evaluation、测试和回归策略时，
 读取 `references/evidence-strategy.md`。

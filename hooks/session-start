@@ -11,3 +11,22 @@ if [ -f "$SKILL_FILE" ]; then
   # Strip YAML frontmatter
   awk 'BEGIN{skip=0} /^---$/{skip++; next} skip<2{next} {print}' "$SKILL_FILE"
 fi
+
+PROFILE_FILE="${DEVKIT_PROJECT_PROFILE:-}"
+if [ -z "$PROFILE_FILE" ]; then
+  PROJECT_ROOT="$(git -C "${PWD}" rev-parse --show-toplevel 2>/dev/null || true)"
+  if [ -n "$PROJECT_ROOT" ]; then
+    PROFILE_FILE="${PROJECT_ROOT}/.devkit/project.json"
+  elif [ -f "${PWD}/.devkit/project.json" ]; then
+    PROFILE_FILE="${PWD}/.devkit/project.json"
+  fi
+fi
+
+if [ -n "$PROFILE_FILE" ]; then
+  if [ -f "$PROFILE_FILE" ]; then
+    printf '\nDevkit project profile detected: %s\n' "$PROFILE_FILE"
+    printf '%s\n' 'Read it before selecting project commands, environments, operations targets, statistics access, or report cadence. It supplies defaults, not authorization.'
+  elif [ -n "${DEVKIT_PROJECT_PROFILE:-}" ]; then
+    printf '\nDevkit project profile not found: %s\n' "$PROFILE_FILE"
+  fi
+fi

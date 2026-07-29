@@ -15,9 +15,16 @@ L0–L3 只控制阶段深度、证据和持久化程度，不再维护另一套
 ## Development Start
 
 1. 读取用户原话、相关代码、仓库说明和已有 Issue/PR/ADR。
-2. 检测语言、项目原生工具、Git/GitHub 能力和工作区状态。
-3. 按 `references/level-decision.md` 判断 L0–L3。
-4. **REQUIRED SUB-SKILL:** 使用 `sies-engineering` 建立或恢复研发状态。
+2. 在仓库根目录查找 `.devkit/project.json`；存在时按
+   `references/project-profile.md` 读取项目参数。也可用
+   `DEVKIT_PROJECT_PROFILE` 指定显式路径。
+3. 检测语言、项目原生工具、Git/GitHub 能力和工作区状态。
+4. 按 `references/level-decision.md` 判断 L0–L3。
+5. **REQUIRED SUB-SKILL:** 使用 `sies-engineering` 建立或恢复研发状态。
+
+项目参数提供路径、命令、环境和汇报默认值，不覆盖系统/用户指令、`AGENTS.md` 或安全
+门禁，也不构成部署、生产访问或破坏性操作授权。项目参数无效或缺失时，回退到仓库原生
+文档与工具；不要猜测。
 
 用户已说“直接开始”“不用讨论”或给出等价授权时，告知判断后直接推进。不要重复询问
 Issue、worktree、计划或评审方式；根据风险自动选择，并在交付时说明。
@@ -69,6 +76,8 @@ Issue、worktree、计划或评审方式；根据风险自动选择，并在交�
 | **imagegen-frontend-web** | 生成纯图片网站概念与分区参考 |
 | **imagegen-frontend-mobile** | 生成移动端屏幕和流程概念图 |
 | **pptx** | 创建、读取、编辑和验证 PowerPoint |
+| **deployment-operations** | 部署、发布、回滚、健康检查与运行时排障 |
+| **production-statistics** | 使用专用只读账号完成生产运营统计 |
 | **mihomo-proxy-setup** | 安装和维护 Mihomo 开发代理 |
 | **github-create-issue** | 创建自适应 SIES Issue Profile |
 | **github-issue-workflow** | 从现有 GitHub 目标和证据恢复状态 |
@@ -96,5 +105,6 @@ Skills 在相关任务中自动触发。显式调用方式：
 
 - `references/level-decision.md` — L0–L3 深度判定
 - `references/language-stack.md` — 语言检测和原生工具回退
+- `references/project-profile.md` — `.devkit/project.json` 项目参数契约
 - `references/orchestration-cheatsheet.md` — 场景、阶段和 skill 速查
 - `references/system-learning.md` — Learning Candidate 筛选与晋升

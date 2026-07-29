@@ -4,13 +4,13 @@
     "name": "zhpeng24"
   },
   "metadata": {
-    "description": "Cross-platform SIES engineering, writing, design, image, and PowerPoint skills"
+    "description": "Cross-platform SIES engineering, project profiles, operations, reporting, writing, design, image, and PowerPoint skills"
   },
   "plugins": [
     {
       "name": "devkit",
-      "version": "1.2.0",
-      "description": "Cross-platform AI-agent skills with SIES engineering, writing, frontend design, image workflows, PowerPoint, GitHub, and tooling",
+      "version": "1.3.0",
+      "description": "Cross-platform AI-agent skills with SIES engineering, project profiles, operations, production statistics, reporting, writing, design, PowerPoint, GitHub, and tooling",
       "source": "./"
     }
   ]

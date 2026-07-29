@@ -1,0 +1,4 @@
+interface:
+  display_name: "Production Statistics"
+  short_description: "Run safe read-only production statistics"
+  default_prompt: "Use $production-statistics to answer this production metrics request with read-only aggregate queries."

@@ -78,6 +78,18 @@ RED–GREEN–REFACTOR。
 
 Issue 和分支不是阶段的必然产物。只有需要协作、恢复、独立交付或风险隔离时才创建。
 
+## Operations and Artifact Routing
+
+| Signal | Route |
+|---|---|
+| 部署、发布、回滚、健康检查、运行时或生产/测试环境排障 | `deployment-operations` |
+| 明确的生产运营/业务统计，只需要只读聚合查询 | `production-statistics` |
+| 周报、月报、架构/MVP/项目汇报 `.pptx` | `pptx` 的 repository-report 模式 |
+| 项目存在 `.devkit/project.json` | 只读取当前任务相关对象；参数是默认值，不是授权 |
+
+生产统计与部署必须保持边界：统计 skill 不执行 DDL/DML、修复、部署或 Git 版本确认；
+部署 skill 不因为能访问数据库就替代专用只读统计流程。
+
 ## Planning and Review
 
 - 计划只写到足以避免遗漏和协调接口；不把每次编辑拆成独立任务。
